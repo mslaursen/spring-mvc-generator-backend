@@ -20,13 +20,15 @@ public class EntityDetailController {
     @PostMapping
     public ResponseEntity<Resource> test(@RequestBody EntityDetail ed) {
 
-        System.out.println(ed.getEntityName());
+
+        System.out.println(ed.toClassFormat());
 
 
         Path path = Paths.get("files/test.java");
         Resource resource = null;
         try {
             resource = new UrlResource(path.toUri());
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

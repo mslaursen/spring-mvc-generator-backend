@@ -7,9 +7,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Vector2S {
+public class Vector3S {
 
     private String val1;
     private String val2;
+    private String val3;
 
 }
