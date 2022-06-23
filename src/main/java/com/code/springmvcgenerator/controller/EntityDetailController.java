@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 @RestController
 @RequestMapping("/api/entity-details")
 @CrossOrigin
-public class EntityDetailsController {
+public class EntityDetailController {
 
     @PostMapping
     public ResponseEntity<Resource> test(@RequestBody EntityDetail ed) {
