@@ -1,7 +1,6 @@
 package com.code.springmvcgenerator.controller;
 
-import com.code.springmvcgenerator.entity.EntityDetails;
-import org.springframework.core.io.InputStreamResource;
+import com.code.springmvcgenerator.entity.EntityDetail;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -9,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,10 +17,10 @@ import java.nio.file.Paths;
 @CrossOrigin
 public class EntityDetailsController {
 
-    @GetMapping
-    public ResponseEntity<Resource> test(@RequestBody EntityDetails ed) {
+    @PostMapping
+    public ResponseEntity<Resource> test(@RequestBody EntityDetail ed) {
 
-        System.out.println(ed.getRelations().toString());
+        System.out.println(ed.getEntityName());
 
 
         Path path = Paths.get("files/test.java");

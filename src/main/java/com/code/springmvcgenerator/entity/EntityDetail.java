@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
-public class EntityDetails {
+public class EntityDetail {
     private String entityName;
     private String entityNamePlural;
-    private Map<String, String> variables;
-    private Map<String, String> relations;
+    private List<Vector2S> variables;
+    private List<Vector2S> relations;
 }
