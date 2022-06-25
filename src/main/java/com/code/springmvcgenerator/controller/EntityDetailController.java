@@ -1,6 +1,8 @@
 package com.code.springmvcgenerator.controller;
 
 import com.code.springmvcgenerator.entity.EntityDetail;
+import com.code.springmvcgenerator.service.EntityDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -17,11 +19,18 @@ import java.nio.file.Paths;
 @CrossOrigin
 public class EntityDetailController {
 
+    private final EntityDetailService service;
+
+    @Autowired
+    public EntityDetailController(EntityDetailService service) {
+        this.service = service;
+    }
+
     @PostMapping
     public ResponseEntity<Resource> test(@RequestBody EntityDetail ed) {
 
 
-        System.out.println(ed.toClassFormat());
+        System.out.println(service.toEntityClass(ed));
 
 
         Path path = Paths.get("files/test.java");
