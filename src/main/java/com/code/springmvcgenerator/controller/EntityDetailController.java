@@ -1,5 +1,6 @@
 package com.code.springmvcgenerator.controller;
 
+import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
 import com.code.springmvcgenerator.service.EntityDetailService;
 import com.code.springmvcgenerator.utils.Util;
@@ -46,13 +47,15 @@ public class EntityDetailController {
 
         ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 
+        List<ClassDetail> classes = service.getAllClasses(eds);
+
         ArrayList<File> files = new ArrayList<>();
-        for (EntityDetail ed : eds) {
-            String filePath = "files-test/" + ed.getEntityName() + ".java";
+        for (ClassDetail c : classes) {
+            String filePath = "files-test/" + c.getName() + ".java";
             File newFile = new File(filePath);
             if (newFile.createNewFile()) {
                 FileWriter fw = new FileWriter(newFile);
-                fw.write(service.toEntityClass(ed));
+                fw.write(c.getContent());
                 files.add(new File(newFile.getAbsolutePath()));
                 fw.close();
             }

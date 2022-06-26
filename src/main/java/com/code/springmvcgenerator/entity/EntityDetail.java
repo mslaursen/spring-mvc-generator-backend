@@ -15,4 +15,8 @@ public class EntityDetail {
     private String entityNamePlural;
     private List<Vector3S> variables;
     private List<Vector3S> relations;
+    private Boolean hasCreate;
+    private Boolean hasRead;
+    private Boolean hasUpdate;
+    private Boolean hasDelete;
 }
