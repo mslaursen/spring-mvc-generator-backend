@@ -134,9 +134,10 @@ public class EntityDetailService {
         StringBuilder sb = new StringBuilder();
         String entityNameLowerService = Util.decapitalize(entityDetail.getEntityName()) + "Service";
         String entityNameLower = Util.decapitalize(entityDetail.getEntityName());
+        String entityNamePluralLower = Util.decapitalize(entityDetail.getEntityNamePlural());
 
         sb.append("@RestController\n")
-                .append("@RequestMapping(/api/")
+                .append("@RequestMapping(\"/api/")
                 .append(entityDetail.getEntityNamePlural().toLowerCase())
                 .append("\")\n")
                 .append("@CrossOrigin\n")
@@ -210,20 +211,111 @@ public class EntityDetailService {
 
             sb.append(SPACES)
                     .append("}\n\n");
-
-
         }
 
         if (entityDetail.getHasRead()) {
+            sb.append(SPACES)
+                    .append("@GetMapping\n")
+                    .append(SPACES)
+                    .append("public ResponseEntity<List<")
+                    .append(entityDetail.getEntityName())
+                    .append(">> ")
+                    .append("read")
+                    .append("() {\n");
 
+            sb.append(SPACES)
+                    .append(SPACES)
+                    .append("List<")
+                    .append(entityDetail.getEntityName())
+                    .append("> ")
+                    .append(entityNamePluralLower)
+                    .append(" = ")
+                    .append(entityNameLowerService)
+                    .append(".read(")
+                    .append(");\n");
+
+            sb.append(SPACES)
+                    .append(SPACES)
+                    .append("return ResponseEntity.ok()\n")
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(".body(")
+                    .append(entityNamePluralLower)
+                    .append(");\n");
+
+            sb.append(SPACES)
+                    .append("}\n\n");
         }
 
         if (entityDetail.getHasUpdate()) {
+            sb.append(SPACES)
+                    .append("@PutMapping\n")
+                    .append(SPACES)
+                    .append("public ResponseEntity<")
+                    .append(entityDetail.getEntityName())
+                    .append("> ")
+                    .append("update")
+                    .append("(@RequestBody ")
+                    .append(entityDetail.getEntityName())
+                    .append(" ")
+                    .append(entityNameLower)
+                    .append(") {\n");
 
+            sb.append(SPACES)
+                    .append(SPACES)
+                    .append(entityDetail.getEntityName())
+                    .append(" updated")
+                    .append(entityDetail.getEntityName())
+                    .append(" = ")
+                    .append(entityNameLowerService)
+                    .append(".save(")
+                    .append(entityNameLower)
+                    .append(");\n");
+
+            sb.append(SPACES)
+                    .append(SPACES)
+                    .append("return ResponseEntity.ok()\n")
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(".body(")
+                    .append("updated")
+                    .append(entityDetail.getEntityName())
+                    .append(");\n");
+
+            sb.append(SPACES)
+                    .append("}\n\n");
         }
 
         if (entityDetail.getHasDelete()) {
+            sb.append(SPACES)
+                    .append("@DeleteMapping(\"/{id}\")\n")
+                    .append(SPACES)
+                    .append("public ResponseEntity<")
+                    .append(entityDetail.getEntityName())
+                    .append("> ")
+                    .append("deleteById")
+                    .append("(@PathVariable Long id) {\n");
 
+            sb.append(SPACES)
+                    .append(SPACES)
+                    .append(entityNameLowerService)
+                    .append(".deleteById(id);\n");
+
+            sb.append(SPACES)
+                    .append(SPACES)
+                    .append("return ResponseEntity.ok()\n")
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(SPACES)
+                    .append(".build();\n");
+
+            sb.append(SPACES)
+                    .append("}\n\n");
         }
 
         classDetail.setName(entityDetail.getEntityName() + "Controller");
