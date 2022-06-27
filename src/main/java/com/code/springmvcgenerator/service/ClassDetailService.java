@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class EntityDetailService {
+public class ClassDetailService {
     private final byte SPACING = 4;
     private final String SPACES = " ".repeat(SPACING);
 

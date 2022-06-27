@@ -2,7 +2,7 @@ package com.code.springmvcgenerator.controller;
 
 import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
-import com.code.springmvcgenerator.service.EntityDetailService;
+import com.code.springmvcgenerator.service.ClassDetailService;
 import com.code.springmvcgenerator.service.ExportService;
 import com.code.springmvcgenerator.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ import java.util.List;
 @CrossOrigin
 public class EntityDetailController {
 
-    private final EntityDetailService entityDetailService;
+    private final ClassDetailService classDetailService;
     private final ExportService exportService;
 
     @Autowired
-    public EntityDetailController(EntityDetailService entityDetailService, ExportService exportService) {
-        this.entityDetailService = entityDetailService;
+    public EntityDetailController(ClassDetailService classDetailService, ExportService exportService) {
+        this.classDetailService = classDetailService;
         this.exportService = exportService;
     }
 
@@ -33,7 +33,7 @@ public class EntityDetailController {
 
         Util.clearFolder(zipFolder);
 
-        List<ClassDetail> classes = entityDetailService.getAllClasses(eds);
+        List<ClassDetail> classes = classDetailService.getAllClasses(eds);
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"" + zipName + "\"");
 
