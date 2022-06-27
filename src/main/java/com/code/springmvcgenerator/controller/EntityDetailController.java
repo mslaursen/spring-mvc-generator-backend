@@ -5,12 +5,11 @@ import com.code.springmvcgenerator.entity.EntityDetail;
 import com.code.springmvcgenerator.service.EntityDetailService;
 import com.code.springmvcgenerator.service.ExportService;
 import com.code.springmvcgenerator.utils.Util;
-import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+
 import java.util.List;
 
 @RestController
@@ -28,7 +27,7 @@ public class EntityDetailController {
     }
 
     @GetMapping("/export")
-    public void getZip(@RequestBody List<EntityDetail> eds, HttpServletResponse response) {
+    public void exportZip(@RequestBody List<EntityDetail> eds, HttpServletResponse response) {
         String zipFolder = "files-test";
         String zipName = "test.zip";
 

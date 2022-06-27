@@ -1,23 +1,15 @@
 package com.code.springmvcgenerator.service;
 
-import antlr.StringUtils;
+
 import com.code.springmvcgenerator.constants.ClassType;
 import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
 import com.code.springmvcgenerator.entity.Vector3S;
 import com.code.springmvcgenerator.utils.Util;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Service
 public class EntityDetailService {
