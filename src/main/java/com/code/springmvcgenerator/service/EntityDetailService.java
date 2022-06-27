@@ -53,7 +53,7 @@ public class EntityDetailService {
                 .append(SPACES)
                 .append("@GeneratedValue(strategy = GenerationType.IDENTITY)\n")
                 .append(SPACES)
-                .append("private Long id\n");
+                .append("private Long id;\n");
 
 
         // Relationship columns
@@ -119,7 +119,7 @@ public class EntityDetailService {
                     .append(v.getVal1())
                     .append(" ")
                     .append(v.getVal2())
-                    .append("\n");
+                    .append(";\n");
         }
 
         sb.append("}\n");
