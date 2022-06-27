@@ -16,30 +16,35 @@ import java.util.zip.ZipOutputStream;
 
 @Service
 public class ExportService {
-    public void exportZipWithClasses(HttpServletResponse response, List<ClassDetail> classes, String folderPath) throws IOException {
-        ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 
-        ArrayList<File> files = new ArrayList<>();
-        for (ClassDetail c : classes) {
-            String filePath = folderPath + "/" + c.getName() + ".java";
-            File newFile = new File(filePath);
-            if (newFile.createNewFile()) {
-                FileWriter fw = new FileWriter(newFile);
-                fw.write(c.getContent());
-                files.add(new File(newFile.getAbsolutePath()));
-                fw.close();
+    public void exportZipWithClasses(HttpServletResponse response, List<ClassDetail> classes, String folderPath) {
+        try {
+            ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+
+            ArrayList<File> files = new ArrayList<>();
+            for (ClassDetail c : classes) {
+                String filePath = folderPath + "/" + c.getName() + ".java";
+                File newFile = new File(filePath);
+                if (newFile.createNewFile()) {
+                    FileWriter fw = new FileWriter(newFile);
+                    fw.write(c.getContent());
+                    files.add(new File(newFile.getAbsolutePath()));
+                    fw.close();
+                }
             }
+
+            for (File file : files) {
+                zos.putNextEntry(new ZipEntry(file.getName()));
+                FileInputStream fis = new FileInputStream(file);
+
+                IOUtils.copy(fis, zos);
+
+                fis.close();
+                zos.closeEntry();
+            }
+            zos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        for (File file : files) {
-            zos.putNextEntry(new ZipEntry(file.getName()));
-            FileInputStream fis = new FileInputStream(file);
-
-            IOUtils.copy(fis, zos);
-
-            fis.close();
-            zos.closeEntry();
-        }
-        zos.close();
     }
 }

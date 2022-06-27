@@ -28,13 +28,16 @@ public class EntityDetailController {
     }
 
     @GetMapping("/export")
-    public void getZip(@RequestBody List<EntityDetail> eds, HttpServletResponse response) throws IOException {
-        Util.clearFolder("files-test");
+    public void getZip(@RequestBody List<EntityDetail> eds, HttpServletResponse response) {
+        String zipFolder = "files-test";
+        String zipName = "test.zip";
+
+        Util.clearFolder(zipFolder);
 
         List<ClassDetail> classes = entityDetailService.getAllClasses(eds);
         response.setStatus(HttpServletResponse.SC_OK);
-        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
+        response.addHeader("Content-Disposition", "attachment; filename=\"" + zipName + "\"");
 
-        exportService.exportZipWithClasses(response, classes, "files-test");
+        exportService.exportZipWithClasses(response, classes, zipFolder);
     }
 }

@@ -6,9 +6,13 @@ import java.io.File;
 import java.io.IOException;
 
 public class Util {
-    public static void clearFolder(String path) throws IOException {
-        File directory = new File(path);
-        FileUtils.cleanDirectory(directory);
+    public static void clearFolder(String path) {
+        try {
+            File directory = new File(path);
+            FileUtils.cleanDirectory(directory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String decapitalize(String string) {
