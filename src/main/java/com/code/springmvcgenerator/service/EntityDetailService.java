@@ -1,5 +1,7 @@
 package com.code.springmvcgenerator.service;
 
+import antlr.StringUtils;
+import com.code.springmvcgenerator.constants.ClassType;
 import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
 import com.code.springmvcgenerator.entity.Vector3S;
@@ -18,9 +20,9 @@ public class EntityDetailService {
         List<ClassDetail> classes = new ArrayList<>();
 
         classes.add(toEntityClass(entityDetail));
-        classes.add(toControllerClass(entityDetail));
-        //classes.add(toServiceClass(entityDetail));
-        //classes.add(toRepositoryInterface(entityDetail));
+        classes.add(toClassByClassType(entityDetail, ClassType.CONTROLLER));
+        classes.add(toClassByClassType(entityDetail, ClassType.SERVICE));
+        classes.add(toClassByClassType(entityDetail, ClassType.REPOSITORY));
 
         return classes;
     }
@@ -120,7 +122,8 @@ public class EntityDetailService {
                     .append("\n");
         }
 
-        sb.append("}");
+        sb.append("}\n");
+
 
         classDetail.setName(entityDetail.getEntityName());
         classDetail.setContent(sb.toString());
@@ -128,11 +131,22 @@ public class EntityDetailService {
         return classDetail;
     }
 
-    public ClassDetail toControllerClass(EntityDetail entityDetail) {
+    public ClassDetail toClassByClassType(EntityDetail entityDetail, ClassType classType) {
         ClassDetail classDetail = new ClassDetail();
-
         StringBuilder sb = new StringBuilder();
-        String entityNameLowerService = Util.decapitalize(entityDetail.getEntityName()) + "Service";
+
+        String dependency = "";
+
+        switch (classType) {
+            case CONTROLLER -> dependency = "Service";
+            case SERVICE -> dependency = "Repository";
+            case REPOSITORY -> {
+                return toRepositoryInterface(entityDetail);
+            }
+        }
+
+        String type = Util.capitalize(classType.toString().toLowerCase());
+        String entityNameLowerDependency = Util.decapitalize(entityDetail.getEntityName()) + dependency;
         String entityNameLower = Util.decapitalize(entityDetail.getEntityName());
         String entityNamePluralLower = Util.decapitalize(entityDetail.getEntityNamePlural());
 
@@ -143,13 +157,15 @@ public class EntityDetailService {
                 .append("@CrossOrigin\n")
                 .append("public class ")
                 .append(entityDetail.getEntityName())
-                .append("Controller {\n\n");
+                .append(type)
+                .append(" {\n\n");
 
         sb.append(SPACES)
                 .append("private final ")
                 .append(entityDetail.getEntityName())
-                .append("Service ")
-                .append(entityNameLowerService)
+                .append(dependency)
+                .append(" ")
+                .append(entityNameLowerDependency)
                 .append(";\n\n");
 
         sb.append(SPACES)
@@ -160,14 +176,14 @@ public class EntityDetailService {
                 .append("Controller(")
                 .append(entityDetail.getEntityName())
                 .append("Service ")
-                .append(entityNameLowerService)
+                .append(entityNameLowerDependency)
                 .append(") {\n")
                 .append(SPACES)
                 .append(SPACES)
                 .append("this.")
-                .append(entityNameLowerService)
+                .append(entityNameLowerDependency)
                 .append(" = ")
-                .append(entityNameLowerService)
+                .append(entityNameLowerDependency)
                 .append(";\n")
                 .append(SPACES)
                 .append("}\n\n");
@@ -192,7 +208,7 @@ public class EntityDetailService {
                     .append(" saved")
                     .append(entityDetail.getEntityName())
                     .append(" = ")
-                    .append(entityNameLowerService)
+                    .append(entityNameLowerDependency)
                     .append(".save(")
                     .append(entityNameLower)
                     .append(");\n");
@@ -230,7 +246,7 @@ public class EntityDetailService {
                     .append("> ")
                     .append(entityNamePluralLower)
                     .append(" = ")
-                    .append(entityNameLowerService)
+                    .append(entityNameLowerDependency)
                     .append(".read(")
                     .append(");\n");
 
@@ -269,7 +285,7 @@ public class EntityDetailService {
                     .append(" updated")
                     .append(entityDetail.getEntityName())
                     .append(" = ")
-                    .append(entityNameLowerService)
+                    .append(entityNameLowerDependency)
                     .append(".save(")
                     .append(entityNameLower)
                     .append(");\n");
@@ -302,7 +318,7 @@ public class EntityDetailService {
 
             sb.append(SPACES)
                     .append(SPACES)
-                    .append(entityNameLowerService)
+                    .append(entityNameLowerDependency)
                     .append(".deleteById(id);\n");
 
             sb.append(SPACES)
@@ -315,20 +331,32 @@ public class EntityDetailService {
                     .append(".build();\n");
 
             sb.append(SPACES)
-                    .append("}\n\n");
+                    .append("}");
         }
 
-        classDetail.setName(entityDetail.getEntityName() + "Controller");
+        sb.append("\n}\n");
+
+        classDetail.setName(entityDetail.getEntityName() + type);
         classDetail.setContent(sb.toString());
 
         return classDetail;
     }
 
-    public String toServiceClass(EntityDetail entityDetail) {
-        return null;
-    }
 
-    public String toRepositoryInterface(EntityDetail entityDetail) {
-        return null;
+    public ClassDetail toRepositoryInterface(EntityDetail entityDetail) {
+        ClassDetail classDetail = new ClassDetail();
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("public interface ")
+                    .append(entityDetail.getEntityName())
+                    .append("Repository extends<")
+                    .append(entityDetail.getEntityName())
+                    .append(", Long> {\n")
+                    .append("}\n");
+
+        classDetail.setName(entityDetail.getEntityName() + "Repository");
+        classDetail.setContent(sb.toString());
+        return classDetail;
     }
 }
