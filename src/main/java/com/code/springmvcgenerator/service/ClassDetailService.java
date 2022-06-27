@@ -131,7 +131,7 @@ public class ClassDetailService {
         return classDetail;
     }
 
-    public ClassDetail toClassByClassType(EntityDetail entityDetail, ClassType classType) {
+    private ClassDetail toClassByClassType(EntityDetail entityDetail, ClassType classType) {
         String dependency = "";
 
         switch (classType) {
@@ -346,7 +346,7 @@ public class ClassDetailService {
     }
 
 
-    public ClassDetail toRepositoryInterface(EntityDetail entityDetail) {
+    private ClassDetail toRepositoryInterface(EntityDetail entityDetail) {
         ClassDetail classDetail = new ClassDetail();
 
         StringBuilder sb = new StringBuilder();
