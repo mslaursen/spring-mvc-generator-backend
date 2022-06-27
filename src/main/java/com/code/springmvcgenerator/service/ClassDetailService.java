@@ -29,9 +29,11 @@ public class ClassDetailService {
 
     public List<ClassDetail> getAllClasses(List<EntityDetail> entityDetails) {
         List<ClassDetail> classes = new ArrayList<>();
+
         for (EntityDetail ed : entityDetails) {
             classes.addAll(getClasses(ed));
         }
+
         return classes;
     }
 
@@ -55,9 +57,7 @@ public class ClassDetailService {
                 .append(SPACES)
                 .append("private Long id;\n");
 
-
         // Relationship columns
-
         for (Vector3S v : entityDetail.getRelations()) {
             sb.append(SPACES);
             switch (v.getVal1()) {
@@ -99,7 +99,6 @@ public class ClassDetailService {
                         .append(";\n");
             }
         }
-
 
         // Columns
         for (Vector3S v : entityDetail.getVariables()) {
@@ -344,7 +343,6 @@ public class ClassDetailService {
 
         return classDetail;
     }
-
 
     private ClassDetail toRepositoryInterface(EntityDetail entityDetail) {
         ClassDetail classDetail = new ClassDetail();
