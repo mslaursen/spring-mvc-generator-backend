@@ -6,10 +6,18 @@ import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
 import com.code.springmvcgenerator.entity.Vector3S;
 import com.code.springmvcgenerator.utils.Util;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class EntityDetailService {
@@ -19,7 +27,7 @@ public class EntityDetailService {
     private List<ClassDetail> getClasses(EntityDetail entityDetail) {
         List<ClassDetail> classes = new ArrayList<>();
 
-        classes.add(toEntityClass(entityDetail));
+        classes.add(toClassByClassType(entityDetail, ClassType.ENTITY));
         classes.add(toClassByClassType(entityDetail, ClassType.CONTROLLER));
         classes.add(toClassByClassType(entityDetail, ClassType.SERVICE));
         classes.add(toClassByClassType(entityDetail, ClassType.REPOSITORY));
@@ -35,7 +43,7 @@ public class EntityDetailService {
         return classes;
     }
 
-    public ClassDetail toEntityClass(EntityDetail entityDetail) {
+    private ClassDetail toEntityClass(EntityDetail entityDetail) {
         ClassDetail classDetail = new ClassDetail();
 
         StringBuilder sb  = new StringBuilder()
@@ -132,9 +140,6 @@ public class EntityDetailService {
     }
 
     public ClassDetail toClassByClassType(EntityDetail entityDetail, ClassType classType) {
-        ClassDetail classDetail = new ClassDetail();
-        StringBuilder sb = new StringBuilder();
-
         String dependency = "";
 
         switch (classType) {
@@ -143,7 +148,13 @@ public class EntityDetailService {
             case REPOSITORY -> {
                 return toRepositoryInterface(entityDetail);
             }
+            case ENTITY -> {
+                return toEntityClass(entityDetail);
+            }
         }
+
+        ClassDetail classDetail = new ClassDetail();
+        StringBuilder sb = new StringBuilder();
 
         String type = Util.capitalize(classType.toString().toLowerCase());
         String entityNameLowerDependency = Util.decapitalize(entityDetail.getEntityName()) + dependency;
@@ -357,6 +368,7 @@ public class EntityDetailService {
 
         classDetail.setName(entityDetail.getEntityName() + "Repository");
         classDetail.setContent(sb.toString());
+
         return classDetail;
     }
 }
