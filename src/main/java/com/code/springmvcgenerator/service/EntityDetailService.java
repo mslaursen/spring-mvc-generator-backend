@@ -350,7 +350,7 @@ public class EntityDetailService {
 
         sb.append("public interface ")
                     .append(entityDetail.getEntityName())
-                    .append("Repository extends<")
+                    .append("Repository extends JpaRepository<")
                     .append(entityDetail.getEntityName())
                     .append(", Long> {\n")
                     .append("}\n");
