@@ -23,13 +23,14 @@ public class EntityDetailController {
     private final ClassDetailService classDetailService;
     private final ExportService exportService;
 
+    @Autowired
     public EntityDetailController(EntityDetailService entityDetailService, ClassDetailService classDetailService, ExportService exportService) {
         this.entityDetailService = entityDetailService;
         this.classDetailService = classDetailService;
         this.exportService = exportService;
     }
 
-    @Autowired
+
 
 
     @PostMapping("/export")
