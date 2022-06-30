@@ -61,32 +61,32 @@ public class ClassDetailService {
         // Relationship columns
         for (Relation v : entityDetail.getRelations()) {
             sb.append(SPACES);
-            switch (v.getRelation()) {
+            switch (v.getVal1()) {
                 case "ManyToOne", "OneToOne" -> sb
                         .append("\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getRelation())
+                        .append(v.getVal1())
                         .append("(cascade = CascadeType.MERGE)\n")
                         .append(SPACES)
                         .append("@JoinColumn(name = \"")
-                        .append(v.getName().toLowerCase())
+                        .append(v.getVal2().toLowerCase())
                         .append("_id\")\n")
                         .append(SPACES)
                         .append("private ")
-                        .append(v.getName())
+                        .append(v.getVal2())
                         .append(" ")
-                        .append(v.getName().toLowerCase())
+                        .append(v.getVal2().toLowerCase())
                         .append(";\n");
                 case "OneToMany" -> sb
                         .append("\n")
                         .append(SPACES)
                         .append("@JsonBackReference(value = \"")
-                        .append(v.getNamePlural().toLowerCase())
+                        .append(v.getVal3().toLowerCase())
                         .append("\")\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getRelation())
+                        .append(v.getVal1())
                         .append("(mappedBy = \"")
                         .append(entityDetail.getEntityName().toLowerCase())
                         .append("\", cascade = CascadeType.MERGE)\n")
@@ -94,9 +94,9 @@ public class ClassDetailService {
                         .append("@ToString.Exclude\n")
                         .append(SPACES)
                         .append("private List<")
-                        .append(v.getName())
+                        .append(v.getVal2())
                         .append("> ")
-                        .append(v.getNamePlural().toLowerCase())
+                        .append(v.getVal3().toLowerCase())
                         .append(";\n");
             }
         }
@@ -105,20 +105,20 @@ public class ClassDetailService {
         for (Variable v : entityDetail.getVariables()) {
             sb.append(SPACES);
 
-            if (v.getNamePlural() != null) {
+            if (v.getVal3() != null) {
                 sb.append("\n")
                         .append(SPACES)
                         .append("@Column(name = \"")
-                        .append(v.getNamePlural())
+                        .append(v.getVal3())
                         .append("\")");
             }
 
             sb.append("\n")
                     .append(SPACES)
                     .append("private ")
-                    .append(v.getDataType())
+                    .append(v.getVal1())
                     .append(" ")
-                    .append(v.getName())
+                    .append(v.getVal2())
                     .append(";\n");
         }
 

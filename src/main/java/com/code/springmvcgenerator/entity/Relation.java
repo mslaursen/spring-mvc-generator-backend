@@ -17,9 +17,9 @@ public class Relation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String relation;
-    private String name;
-    private String namePlural;
+    private String val1;
+    private String val2;
+    private String val3;
 
     @ManyToOne
     @JoinColumn(name = "entity_detail_id")

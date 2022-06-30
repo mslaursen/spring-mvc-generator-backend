@@ -38,9 +38,9 @@ public class InitData implements CommandLineRunner {
         entityDetailService.save(entityDetail);
 
         Variable v1 = new Variable();
-        v1.setDataType("Integer");
-        v1.setName("AgeLimit");
-        v1.setNamePlural("age_limit");
+        v1.setVal1("Integer");
+        v1.setVal2("AgeLimit");
+        v1.setVal3("age_limit");
         v1.setEntityDetail(entityDetail);
         variableService.save(v1);
 
