@@ -47,12 +47,12 @@ public class ClassDetailService {
                 .append("@ToString\n")
                 .append("@Entity\n")
                 .append("public class ")
-                .append(entityDetail.getEntityName())
+                .append(entityDetail.getName())
                 .append(" {\n")
                 .append(SPACES)
                 .append("@Id\n")
                 .append(SPACES)
-                .append("@Column(name = \"").append(entityDetail.getEntityName().toLowerCase()).append("_id\")\n")
+                .append("@Column(name = \"").append(entityDetail.getName().toLowerCase()).append("_id\")\n")
                 .append(SPACES)
                 .append("@GeneratedValue(strategy = GenerationType.IDENTITY)\n")
                 .append(SPACES)
@@ -61,22 +61,22 @@ public class ClassDetailService {
         // Relationship columns
         for (Relation v : entityDetail.getRelations()) {
             sb.append(SPACES);
-            switch (v.getVal1()) {
+            switch (v.getName()) {
                 case "ManyToOne", "OneToOne" -> sb
                         .append("\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getVal1())
+                        .append(v.getName())
                         .append("(cascade = CascadeType.MERGE)\n")
                         .append(SPACES)
                         .append("@JoinColumn(name = \"")
-                        .append(v.getVal2().toLowerCase())
+                        .append(v.getNamePlural().toLowerCase())
                         .append("_id\")\n")
                         .append(SPACES)
                         .append("private ")
-                        .append(v.getVal2())
+                        .append(v.getNamePlural())
                         .append(" ")
-                        .append(v.getVal2().toLowerCase())
+                        .append(v.getNamePlural().toLowerCase())
                         .append(";\n");
                 case "OneToMany" -> sb
                         .append("\n")
@@ -86,15 +86,15 @@ public class ClassDetailService {
                         .append("\")\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getVal1())
+                        .append(v.getName())
                         .append("(mappedBy = \"")
-                        .append(entityDetail.getEntityName().toLowerCase())
+                        .append(entityDetail.getName().toLowerCase())
                         .append("\", cascade = CascadeType.MERGE)\n")
                         .append(SPACES)
                         .append("@ToString.Exclude\n")
                         .append(SPACES)
                         .append("private List<")
-                        .append(v.getVal2())
+                        .append(v.getNamePlural())
                         .append("> ")
                         .append(v.getVal3().toLowerCase())
                         .append(";\n");
@@ -116,16 +116,16 @@ public class ClassDetailService {
             sb.append("\n")
                     .append(SPACES)
                     .append("private ")
-                    .append(v.getVal1())
+                    .append(v.getName())
                     .append(" ")
-                    .append(v.getVal2())
+                    .append(v.getNamePlural())
                     .append(";\n");
         }
 
         sb.append("}\n");
 
 
-        classDetail.setName(entityDetail.getEntityName());
+        classDetail.setName(entityDetail.getName());
         classDetail.setContent(sb.toString());
 
         return classDetail;
@@ -149,23 +149,23 @@ public class ClassDetailService {
         StringBuilder sb = new StringBuilder();
 
         String type = Util.capitalize(classType.toString().toLowerCase());
-        String entityNameLowerDependency = Util.decapitalize(entityDetail.getEntityName()) + dependency;
-        String entityNameLower = Util.decapitalize(entityDetail.getEntityName());
-        String entityNamePluralLower = Util.decapitalize(entityDetail.getEntityNamePlural());
+        String entityNameLowerDependency = Util.decapitalize(entityDetail.getName()) + dependency;
+        String entityNameLower = Util.decapitalize(entityDetail.getName());
+        String entityNamePluralLower = Util.decapitalize(entityDetail.getNamePlural());
 
         sb.append("@RestController\n")
                 .append("@RequestMapping(\"/api/")
-                .append(entityDetail.getEntityNamePlural().toLowerCase())
+                .append(entityDetail.getNamePlural().toLowerCase())
                 .append("\")\n")
                 .append("@CrossOrigin\n")
                 .append("public class ")
-                .append(entityDetail.getEntityName())
+                .append(entityDetail.getName())
                 .append(type)
                 .append(" {\n\n");
 
         sb.append(SPACES)
                 .append("private final ")
-                .append(entityDetail.getEntityName())
+                .append(entityDetail.getName())
                 .append(dependency)
                 .append(" ")
                 .append(entityNameLowerDependency)
@@ -175,9 +175,9 @@ public class ClassDetailService {
                 .append("@Autowired\n")
                 .append(SPACES)
                 .append("public ")
-                .append(entityDetail.getEntityName())
+                .append(entityDetail.getName())
                 .append("Controller(")
-                .append(entityDetail.getEntityName())
+                .append(entityDetail.getName())
                 .append("Service ")
                 .append(entityNameLowerDependency)
                 .append(") {\n")
@@ -196,20 +196,20 @@ public class ClassDetailService {
                     .append("@PostMapping\n")
                     .append(SPACES)
                     .append("public ResponseEntity<")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append("> ")
                     .append("create")
                     .append("(@RequestBody ")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(" ")
                     .append(entityNameLower)
                     .append(") {\n");
 
             sb.append(SPACES)
                     .append(SPACES)
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(" saved")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(" = ")
                     .append(entityNameLowerDependency)
                     .append(".save(")
@@ -225,7 +225,7 @@ public class ClassDetailService {
                     .append(SPACES)
                     .append(".body(")
                     .append("saved")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(");\n");
 
             sb.append(SPACES)
@@ -237,7 +237,7 @@ public class ClassDetailService {
                     .append("@GetMapping\n")
                     .append(SPACES)
                     .append("public ResponseEntity<List<")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(">> ")
                     .append("read")
                     .append("() {\n");
@@ -245,7 +245,7 @@ public class ClassDetailService {
             sb.append(SPACES)
                     .append(SPACES)
                     .append("List<")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append("> ")
                     .append(entityNamePluralLower)
                     .append(" = ")
@@ -273,20 +273,20 @@ public class ClassDetailService {
                     .append("@PutMapping\n")
                     .append(SPACES)
                     .append("public ResponseEntity<")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append("> ")
                     .append("update")
                     .append("(@RequestBody ")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(" ")
                     .append(entityNameLower)
                     .append(") {\n");
 
             sb.append(SPACES)
                     .append(SPACES)
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(" updated")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(" = ")
                     .append(entityNameLowerDependency)
                     .append(".save(")
@@ -302,7 +302,7 @@ public class ClassDetailService {
                     .append(SPACES)
                     .append(".body(")
                     .append("updated")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(");\n");
 
             sb.append(SPACES)
@@ -314,7 +314,7 @@ public class ClassDetailService {
                     .append("@DeleteMapping(\"/{id}\")\n")
                     .append(SPACES)
                     .append("public ResponseEntity<")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append("> ")
                     .append("deleteById")
                     .append("(@PathVariable Long id) {\n");
@@ -339,7 +339,7 @@ public class ClassDetailService {
 
         sb.append("\n}\n");
 
-        classDetail.setName(entityDetail.getEntityName() + type);
+        classDetail.setName(entityDetail.getName() + type);
         classDetail.setContent(sb.toString());
 
         return classDetail;
@@ -351,13 +351,13 @@ public class ClassDetailService {
         StringBuilder sb = new StringBuilder();
 
         sb.append("public interface ")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append("Repository extends JpaRepository<")
-                    .append(entityDetail.getEntityName())
+                    .append(entityDetail.getName())
                     .append(", Long> {\n")
                     .append("}\n");
 
-        classDetail.setName(entityDetail.getEntityName() + "Repository");
+        classDetail.setName(entityDetail.getName() + "Repository");
         classDetail.setContent(sb.toString());
 
         return classDetail;

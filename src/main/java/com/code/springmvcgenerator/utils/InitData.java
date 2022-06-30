@@ -29,8 +29,8 @@ public class InitData implements CommandLineRunner {
     @Override
     public void run(String... args) {
         EntityDetail entityDetail = new EntityDetail();
-        entityDetail.setEntityName("City");
-        entityDetail.setEntityNamePlural("cities");
+        entityDetail.setName("City");
+        entityDetail.setNamePlural("cities");
         entityDetail.setHasCreate(true);
         entityDetail.setHasRead(true);
         entityDetail.setHasUpdate(false);
@@ -38,15 +38,15 @@ public class InitData implements CommandLineRunner {
         entityDetailService.save(entityDetail);
 
         Variable v1 = new Variable();
-        v1.setVal1("Integer");
-        v1.setVal2("AgeLimit");
+        v1.setName("Integer");
+        v1.setNamePlural("AgeLimit");
         v1.setVal3("age_limit");
         v1.setEntityDetail(entityDetail);
         variableService.save(v1);
 
         EntityDetail entityDetail2 = new EntityDetail();
-        entityDetail2.setEntityName("City2");
-        entityDetail2.setEntityNamePlural("cities");
+        entityDetail2.setName("City2");
+        entityDetail2.setNamePlural("cities");
         entityDetail2.setHasCreate(true);
         entityDetail2.setHasRead(true);
         entityDetail2.setHasUpdate(false);

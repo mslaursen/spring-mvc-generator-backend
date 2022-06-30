@@ -17,8 +17,8 @@ public class EntityDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String entityName;
-    private String entityNamePlural;
+    private String name;
+    private String namePlural;
 
     @OneToMany(mappedBy = "entityDetail", cascade = CascadeType.MERGE)
     @ToString.Exclude
