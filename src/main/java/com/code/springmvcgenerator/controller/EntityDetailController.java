@@ -60,4 +60,11 @@ public class EntityDetailController {
         return ResponseEntity.ok()
                 .body(entityDetails);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EntityDetail> fetchById(@PathVariable Long id) {
+        EntityDetail foundEntityDetail = entityDetailService.findById(id);
+        return ResponseEntity.ok()
+                .body(foundEntityDetail);
+    }
 }

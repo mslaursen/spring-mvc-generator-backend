@@ -22,11 +22,11 @@ public class EntityDetail {
 
     @OneToMany(mappedBy = "entityDetail", cascade = CascadeType.MERGE)
     @ToString.Exclude
-    private List<Vector3S> variables;
+    private List<Variable> variables;
 
     @OneToMany(mappedBy = "entityDetail", cascade = CascadeType.MERGE)
     @ToString.Exclude
-    private List<Vector3S> relations;
+    private List<Relation> relations;
 
     private Boolean hasCreate;
     private Boolean hasRead;

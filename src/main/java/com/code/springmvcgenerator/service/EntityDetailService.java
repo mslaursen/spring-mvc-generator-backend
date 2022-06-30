@@ -24,4 +24,8 @@ public class EntityDetailService {
     public List<EntityDetail> findAll() {
         return entityDetailRepository.findAll();
     }
+
+    public EntityDetail findById(Long id) {
+        return entityDetailRepository.findById(id).orElseThrow();
+    }
 }

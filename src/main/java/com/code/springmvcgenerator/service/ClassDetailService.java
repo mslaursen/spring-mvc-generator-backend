@@ -4,7 +4,8 @@ package com.code.springmvcgenerator.service;
 import com.code.springmvcgenerator.constants.ClassType;
 import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
-import com.code.springmvcgenerator.entity.Vector3S;
+import com.code.springmvcgenerator.entity.Relation;
+import com.code.springmvcgenerator.entity.Variable;
 import com.code.springmvcgenerator.utils.Util;
 import org.springframework.stereotype.Service;
 
@@ -58,34 +59,34 @@ public class ClassDetailService {
                 .append("private Long id;\n");
 
         // Relationship columns
-        for (Vector3S v : entityDetail.getRelations()) {
+        for (Relation v : entityDetail.getRelations()) {
             sb.append(SPACES);
-            switch (v.getVal1()) {
+            switch (v.getRelation()) {
                 case "ManyToOne", "OneToOne" -> sb
                         .append("\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getVal1())
+                        .append(v.getRelation())
                         .append("(cascade = CascadeType.MERGE)\n")
                         .append(SPACES)
                         .append("@JoinColumn(name = \"")
-                        .append(v.getVal2().toLowerCase())
+                        .append(v.getName().toLowerCase())
                         .append("_id\")\n")
                         .append(SPACES)
                         .append("private ")
-                        .append(v.getVal2())
+                        .append(v.getName())
                         .append(" ")
-                        .append(v.getVal2().toLowerCase())
+                        .append(v.getName().toLowerCase())
                         .append(";\n");
                 case "OneToMany" -> sb
                         .append("\n")
                         .append(SPACES)
                         .append("@JsonBackReference(value = \"")
-                        .append(v.getVal3().toLowerCase())
+                        .append(v.getNamePlural().toLowerCase())
                         .append("\")\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getVal1())
+                        .append(v.getRelation())
                         .append("(mappedBy = \"")
                         .append(entityDetail.getEntityName().toLowerCase())
                         .append("\", cascade = CascadeType.MERGE)\n")
@@ -93,31 +94,31 @@ public class ClassDetailService {
                         .append("@ToString.Exclude\n")
                         .append(SPACES)
                         .append("private List<")
-                        .append(v.getVal2())
+                        .append(v.getName())
                         .append("> ")
-                        .append(v.getVal3().toLowerCase())
+                        .append(v.getNamePlural().toLowerCase())
                         .append(";\n");
             }
         }
 
         // Columns
-        for (Vector3S v : entityDetail.getVariables()) {
+        for (Variable v : entityDetail.getVariables()) {
             sb.append(SPACES);
 
-            if (v.getVal3() != null) {
+            if (v.getNamePlural() != null) {
                 sb.append("\n")
                         .append(SPACES)
                         .append("@Column(name = \"")
-                        .append(v.getVal3())
+                        .append(v.getNamePlural())
                         .append("\")");
             }
 
             sb.append("\n")
                     .append(SPACES)
                     .append("private ")
-                    .append(v.getVal1())
+                    .append(v.getDataType())
                     .append(" ")
-                    .append(v.getVal2())
+                    .append(v.getName())
                     .append(";\n");
         }
 
