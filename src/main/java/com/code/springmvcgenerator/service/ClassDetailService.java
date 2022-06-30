@@ -61,22 +61,22 @@ public class ClassDetailService {
         // Relationship columns
         for (Relation v : entityDetail.getRelations()) {
             sb.append(SPACES);
-            switch (v.getName()) {
+            switch (v.getVal1()) {
                 case "ManyToOne", "OneToOne" -> sb
                         .append("\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getName())
+                        .append(v.getVal1())
                         .append("(cascade = CascadeType.MERGE)\n")
                         .append(SPACES)
                         .append("@JoinColumn(name = \"")
-                        .append(v.getNamePlural().toLowerCase())
+                        .append(v.getVal2().toLowerCase())
                         .append("_id\")\n")
                         .append(SPACES)
                         .append("private ")
-                        .append(v.getNamePlural())
+                        .append(v.getVal2())
                         .append(" ")
-                        .append(v.getNamePlural().toLowerCase())
+                        .append(v.getVal2().toLowerCase())
                         .append(";\n");
                 case "OneToMany" -> sb
                         .append("\n")
@@ -86,7 +86,7 @@ public class ClassDetailService {
                         .append("\")\n")
                         .append(SPACES)
                         .append("@")
-                        .append(v.getName())
+                        .append(v.getVal1())
                         .append("(mappedBy = \"")
                         .append(entityDetail.getName().toLowerCase())
                         .append("\", cascade = CascadeType.MERGE)\n")
@@ -94,7 +94,7 @@ public class ClassDetailService {
                         .append("@ToString.Exclude\n")
                         .append(SPACES)
                         .append("private List<")
-                        .append(v.getNamePlural())
+                        .append(v.getVal2())
                         .append("> ")
                         .append(v.getVal3().toLowerCase())
                         .append(";\n");
@@ -116,9 +116,9 @@ public class ClassDetailService {
             sb.append("\n")
                     .append(SPACES)
                     .append("private ")
-                    .append(v.getName())
+                    .append(v.getVal1())
                     .append(" ")
-                    .append(v.getNamePlural())
+                    .append(v.getVal2())
                     .append(";\n");
         }
 
