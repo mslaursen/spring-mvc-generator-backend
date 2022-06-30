@@ -33,4 +33,21 @@ public class VariableController {
         return ResponseEntity.ok()
                 .body(foundVariable);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Variable> updateVariable(
+            @RequestBody Variable variable,
+            @PathVariable Long id) {
+
+        Variable variableToUpdate = variableService.findById(id);
+
+        variableToUpdate.setVal1(variable.getVal1());
+        variableToUpdate.setVal2(variable.getVal2());
+        variableToUpdate.setVal3(variable.getVal3());
+
+        Variable updatedVariable = variableService.update(variableToUpdate);
+
+        return ResponseEntity.ok()
+                .body(updatedVariable);
+    }
 }

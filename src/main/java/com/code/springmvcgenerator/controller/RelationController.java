@@ -1,6 +1,7 @@
 package com.code.springmvcgenerator.controller;
 
 import com.code.springmvcgenerator.entity.Relation;
+import com.code.springmvcgenerator.entity.Variable;
 import com.code.springmvcgenerator.service.RelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +31,22 @@ public class RelationController {
         Relation foundRelation = relationService.findById(id);
         return ResponseEntity.ok()
                 .body(foundRelation);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Relation> updateRelation(
+            @RequestBody Relation relation,
+            @PathVariable Long id) {
+
+        Relation relationToUpdate = relationService.findById(id);
+
+        relationToUpdate.setVal1(relation.getVal1());
+        relationToUpdate.setVal2(relation.getVal2());
+        relationToUpdate.setVal3(relation.getVal3());
+
+        Relation updatedRelation = relationService.update(relationToUpdate);
+
+        return ResponseEntity.ok()
+                .body(updatedRelation);
     }
 }

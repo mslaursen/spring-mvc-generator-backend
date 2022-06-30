@@ -1,6 +1,7 @@
 package com.code.springmvcgenerator.service;
 
 import com.code.springmvcgenerator.entity.Relation;
+import com.code.springmvcgenerator.entity.Variable;
 import com.code.springmvcgenerator.repository.RelationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class RelationService {
 
     public Relation findById(Long id) {
         return relationRepository.findById(id).orElseThrow();
+    }
+
+    public Relation update(Relation relationToUpdate) {
+        return save(relationToUpdate);
     }
 }

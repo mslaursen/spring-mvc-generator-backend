@@ -24,4 +24,8 @@ public class VariableService {
     public Variable findById(Long id) {
         return variableRepository.findById(id).orElseThrow();
     }
+
+    public Variable update(Variable variableToUpdate) {
+        return save(variableToUpdate);
+    }
 }
