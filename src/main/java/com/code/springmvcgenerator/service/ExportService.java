@@ -25,8 +25,10 @@ public class ExportService {
             for (ClassDetail c : classes) {
                 String filePath = folderPath + "/" + c.getName() + ".java";
                 File newFile = new File(filePath);
+
                 if (newFile.createNewFile()) {
                     FileWriter fw = new FileWriter(newFile);
+
                     fw.write(c.getContent());
                     files.add(new File(newFile.getAbsolutePath()));
                     fw.close();
