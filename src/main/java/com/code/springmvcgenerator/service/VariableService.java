@@ -28,4 +28,8 @@ public class VariableService {
     public Variable update(Variable variableToUpdate) {
         return save(variableToUpdate);
     }
+
+    public void deleteById(Long id) {
+        variableRepository.deleteById(id);
+    }
 }

@@ -49,4 +49,11 @@ public class RelationController {
         return ResponseEntity.ok()
                 .body(updatedRelation);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteById(@PathVariable Long id) {
+        relationService.deleteById(id);
+        return ResponseEntity.ok()
+                .build();
+    }
 }

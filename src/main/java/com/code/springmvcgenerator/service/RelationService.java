@@ -27,4 +27,8 @@ public class RelationService {
     public Relation update(Relation relationToUpdate) {
         return save(relationToUpdate);
     }
+
+    public void deleteById(Long id) {
+        relationRepository.deleteById(id);
+    }
 }

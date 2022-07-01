@@ -50,4 +50,11 @@ public class VariableController {
         return ResponseEntity.ok()
                 .body(updatedVariable);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteById(@PathVariable Long id) {
+        variableService.deleteById(id);
+        return ResponseEntity.ok()
+                .build();
+    }
 }
