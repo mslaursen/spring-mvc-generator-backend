@@ -67,4 +67,28 @@ public class EntityDetailController {
         return ResponseEntity.ok()
                 .body(foundEntityDetail);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EntityDetail> updateById(@RequestBody EntityDetail entityDetail, @PathVariable Long id) {
+        EntityDetail entityToUpdate = entityDetailService.findById(id);
+        entityToUpdate.setName(entityDetail.getName());
+        entityToUpdate.setNamePlural(entityDetail.getNamePlural());
+        entityToUpdate.setHasCreate(entityDetail.getHasCreate());
+        entityToUpdate.setHasRead(entityDetail.getHasRead());
+        entityToUpdate.setHasUpdate(entityDetail.getHasUpdate());
+        entityToUpdate.setHasDelete(entityDetail.getHasDelete());
+        entityToUpdate.setRelations(entityDetail.getRelations());
+        entityToUpdate.setVariables(entityDetail.getVariables());
+
+        EntityDetail updatedEntity = entityDetailService.update(entityToUpdate);
+        return ResponseEntity.ok()
+                .body(updatedEntity);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteById(@PathVariable Long id) {
+        entityDetailService.deleteById(id);
+        return ResponseEntity.ok()
+                .build();
+    }
 }

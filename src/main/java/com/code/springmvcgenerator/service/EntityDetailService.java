@@ -28,4 +28,12 @@ public class EntityDetailService {
     public EntityDetail findById(Long id) {
         return entityDetailRepository.findById(id).orElseThrow();
     }
+
+    public EntityDetail update(EntityDetail entityToUpdate) {
+        return save(entityToUpdate);
+    }
+
+    public void deleteById(Long id) {
+        entityDetailRepository.deleteById(id);
+    }
 }
