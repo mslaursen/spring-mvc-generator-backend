@@ -20,13 +20,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/entity-details")
 @CrossOrigin
-public class EntityDetailController {
+public class EntityController {
 
     private final EntityService entityService;
     private final ZipService zipService;
 
     @Autowired
-    public EntityDetailController(EntityService entityService, ZipService zipService) {
+    public EntityController(EntityService entityService, ZipService zipService) {
         this.entityService = entityService;
         this.zipService = zipService;
     }
