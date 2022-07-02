@@ -18,8 +18,9 @@ public class Entity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String namePlural;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
     @ToString.Exclude
@@ -29,8 +30,12 @@ public class Entity {
     @ToString.Exclude
     private List<Relation> relations;
 
+    private String name;
+    private String namePlural;
+
     private Boolean hasCreate;
     private Boolean hasRead;
     private Boolean hasUpdate;
     private Boolean hasDelete;
+
 }

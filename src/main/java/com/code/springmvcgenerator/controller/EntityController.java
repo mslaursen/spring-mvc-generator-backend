@@ -59,7 +59,7 @@ public class EntityController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Entity>> fetchEntityDetails() {
+    public ResponseEntity<List<Entity>> fetchEntities() {
         List<Entity> entities = entityService.findAll();
         return ResponseEntity.ok()
                 .body(entities);
