@@ -54,7 +54,7 @@ public class ZipService {
 
     private List<File> createEntityFiles(List<Entity> eds, String fileFolder) {
         ArrayList<File> files = new ArrayList<>();
-        List<ClassWrapper> classes = transformService.getAllClasses(eds);
+        List<ClassWrapper> classes = transformService.transformToClass(eds);
 
         try {
 

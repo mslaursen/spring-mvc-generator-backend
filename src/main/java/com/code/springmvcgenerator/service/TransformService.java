@@ -28,7 +28,7 @@ public class TransformService {
         return classes;
     }
 
-    public List<ClassWrapper> getAllClasses(List<Entity> entities) {
+    public List<ClassWrapper> transformToClass(List<Entity> entities) {
         List<ClassWrapper> classes = new ArrayList<>();
 
         for (Entity ed : entities) {
@@ -38,98 +38,6 @@ public class TransformService {
         return classes;
     }
 
-    private ClassWrapper toEntityClass(Entity entity) {
-        ClassWrapper classWrapper = new ClassWrapper();
-
-        StringBuilder sb  = new StringBuilder()
-                .append("@Getter\n")
-                .append("@Setter\n")
-                .append("@ToString\n")
-                .append("@Entity\n")
-                .append("public class ")
-                .append(entity.getName())
-                .append(" {\n")
-                .append(SPACES)
-                .append("@Id\n")
-                .append(SPACES)
-                .append("@Column(name = \"").append(entity.getName().toLowerCase()).append("_id\")\n")
-                .append(SPACES)
-                .append("@GeneratedValue(strategy = GenerationType.IDENTITY)\n")
-                .append(SPACES)
-                .append("private Long id;\n");
-
-        // Relationship columns
-        for (Relation v : entity.getRelations()) {
-            sb.append(SPACES);
-            switch (v.getVal1()) {
-                case "ManyToOne", "OneToOne" -> sb
-                        .append("\n")
-                        .append(SPACES)
-                        .append("@")
-                        .append(v.getVal1())
-                        .append("(cascade = CascadeType.MERGE)\n")
-                        .append(SPACES)
-                        .append("@JoinColumn(name = \"")
-                        .append(v.getVal2().toLowerCase())
-                        .append("_id\")\n")
-                        .append(SPACES)
-                        .append("private ")
-                        .append(v.getVal2())
-                        .append(" ")
-                        .append(v.getVal2().toLowerCase())
-                        .append(";\n");
-                case "OneToMany" -> sb
-                        .append("\n")
-                        .append(SPACES)
-                        .append("@JsonBackReference(value = \"")
-                        .append(v.getVal3().toLowerCase())
-                        .append("\")\n")
-                        .append(SPACES)
-                        .append("@")
-                        .append(v.getVal1())
-                        .append("(mappedBy = \"")
-                        .append(entity.getName().toLowerCase())
-                        .append("\", cascade = CascadeType.MERGE)\n")
-                        .append(SPACES)
-                        .append("@ToString.Exclude\n")
-                        .append(SPACES)
-                        .append("private List<")
-                        .append(v.getVal2())
-                        .append("> ")
-                        .append(v.getVal3().toLowerCase())
-                        .append(";\n");
-            }
-        }
-
-        // Columns
-        for (Variable v : entity.getVariables()) {
-            sb.append(SPACES);
-
-            if (v.getVal3() != null) {
-                sb.append("\n")
-                        .append(SPACES)
-                        .append("@Column(name = \"")
-                        .append(v.getVal3())
-                        .append("\")");
-            }
-
-            sb.append("\n")
-                    .append(SPACES)
-                    .append("private ")
-                    .append(v.getVal1())
-                    .append(" ")
-                    .append(v.getVal2())
-                    .append(";\n");
-        }
-
-        sb.append("}\n");
-
-
-        classWrapper.setName(entity.getName());
-        classWrapper.setContent(sb.toString());
-
-        return classWrapper;
-    }
 
     private ClassWrapper toClassByClassType(Entity entity, ClassType classType) {
         String dependency = "";
@@ -340,6 +248,99 @@ public class TransformService {
         sb.append("\n}\n");
 
         classWrapper.setName(entity.getName() + type);
+        classWrapper.setContent(sb.toString());
+
+        return classWrapper;
+    }
+
+    private ClassWrapper toEntityClass(Entity entity) {
+        ClassWrapper classWrapper = new ClassWrapper();
+
+        StringBuilder sb  = new StringBuilder()
+                .append("@Getter\n")
+                .append("@Setter\n")
+                .append("@ToString\n")
+                .append("@Entity\n")
+                .append("public class ")
+                .append(entity.getName())
+                .append(" {\n")
+                .append(SPACES)
+                .append("@Id\n")
+                .append(SPACES)
+                .append("@Column(name = \"").append(entity.getName().toLowerCase()).append("_id\")\n")
+                .append(SPACES)
+                .append("@GeneratedValue(strategy = GenerationType.IDENTITY)\n")
+                .append(SPACES)
+                .append("private Long id;\n");
+
+        // Relationship columns
+        for (Relation v : entity.getRelations()) {
+            sb.append(SPACES);
+            switch (v.getVal1()) {
+                case "ManyToOne", "OneToOne" -> sb
+                        .append("\n")
+                        .append(SPACES)
+                        .append("@")
+                        .append(v.getVal1())
+                        .append("(cascade = CascadeType.MERGE)\n")
+                        .append(SPACES)
+                        .append("@JoinColumn(name = \"")
+                        .append(v.getVal2().toLowerCase())
+                        .append("_id\")\n")
+                        .append(SPACES)
+                        .append("private ")
+                        .append(v.getVal2())
+                        .append(" ")
+                        .append(v.getVal2().toLowerCase())
+                        .append(";\n");
+                case "OneToMany" -> sb
+                        .append("\n")
+                        .append(SPACES)
+                        .append("@JsonBackReference(value = \"")
+                        .append(v.getVal3().toLowerCase())
+                        .append("\")\n")
+                        .append(SPACES)
+                        .append("@")
+                        .append(v.getVal1())
+                        .append("(mappedBy = \"")
+                        .append(entity.getName().toLowerCase())
+                        .append("\", cascade = CascadeType.MERGE)\n")
+                        .append(SPACES)
+                        .append("@ToString.Exclude\n")
+                        .append(SPACES)
+                        .append("private List<")
+                        .append(v.getVal2())
+                        .append("> ")
+                        .append(v.getVal3().toLowerCase())
+                        .append(";\n");
+            }
+        }
+
+        // Columns
+        for (Variable v : entity.getVariables()) {
+            sb.append(SPACES);
+
+            if (v.getVal3() != null) {
+                sb.append("\n")
+                        .append(SPACES)
+                        .append("@Column(name = \"")
+                        .append(v.getVal3())
+                        .append("\")");
+            }
+
+            sb.append("\n")
+                    .append(SPACES)
+                    .append("private ")
+                    .append(v.getVal1())
+                    .append(" ")
+                    .append(v.getVal2())
+                    .append(";\n");
+        }
+
+        sb.append("}\n");
+
+
+        classWrapper.setName(entity.getName());
         classWrapper.setContent(sb.toString());
 
         return classWrapper;
