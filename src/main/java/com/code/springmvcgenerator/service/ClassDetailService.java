@@ -1,6 +1,5 @@
 package com.code.springmvcgenerator.service;
 
-
 import com.code.springmvcgenerator.constants.ClassType;
 import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
@@ -14,6 +13,7 @@ import java.util.List;
 
 @Service
 public class ClassDetailService {
+
     private final byte SPACING = 4;
     private final String SPACES = " ".repeat(SPACING);
 

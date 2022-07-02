@@ -14,7 +14,6 @@ import javax.persistence.Id;
 
 public class ClassDetail {
 
-
     private String name;
     private String content;
 }

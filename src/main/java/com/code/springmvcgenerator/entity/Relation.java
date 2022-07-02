@@ -12,6 +12,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 public class Relation {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +26,4 @@ public class Relation {
     @JoinColumn(name = "entity_detail_id")
     @JsonBackReference(value = "relationJbr")
     private EntityDetail entityDetail;
-
 }

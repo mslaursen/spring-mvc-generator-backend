@@ -23,9 +23,6 @@ public class InitData implements CommandLineRunner {
         this.variableService = variableService;
     }
 
-
-
-
     @Override
     public void run(String... args) {
         EntityDetail entityDetail = new EntityDetail();

@@ -3,6 +3,7 @@ package com.code.springmvcgenerator.controller;
 import com.code.springmvcgenerator.entity.EntityDetail;
 import com.code.springmvcgenerator.service.EntityDetailService;
 import com.code.springmvcgenerator.service.ZipService;
+import com.code.springmvcgenerator.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -30,8 +31,7 @@ public class EntityDetailController {
         this.zipService = zipService;
     }
 
-
-    @GetMapping("/download")
+    @PostMapping("/download")
     public ResponseEntity<Resource> download(@RequestBody List<EntityDetail> eds) throws FileNotFoundException {
         String filesFolder = "files-test";
         String zipName = "test.zip";
@@ -41,6 +41,8 @@ public class EntityDetailController {
         File zipFile = new File(zipName);
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
+
+        Util.clearFolder(filesFolder);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())

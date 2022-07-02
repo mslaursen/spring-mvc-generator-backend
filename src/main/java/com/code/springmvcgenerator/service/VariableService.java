@@ -1,8 +1,6 @@
 package com.code.springmvcgenerator.service;
 
-import com.code.springmvcgenerator.entity.Relation;
 import com.code.springmvcgenerator.entity.Variable;
-import com.code.springmvcgenerator.repository.RelationRepository;
 import com.code.springmvcgenerator.repository.VariableRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

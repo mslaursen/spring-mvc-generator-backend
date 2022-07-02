@@ -12,6 +12,7 @@ import java.util.List;
 @ToString
 @Entity
 public class EntityDetail {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

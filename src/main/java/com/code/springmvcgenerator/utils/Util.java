@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Util {
+
     public static void clearFolder(String path) {
         try {
             File directory = new File(path);

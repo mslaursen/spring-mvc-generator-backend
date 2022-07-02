@@ -12,6 +12,7 @@ import javax.persistence.*;
 @ToString
 @Entity
 public class Variable {
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

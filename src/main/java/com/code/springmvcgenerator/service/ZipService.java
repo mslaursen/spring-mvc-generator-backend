@@ -2,15 +2,11 @@ package com.code.springmvcgenerator.service;
 
 import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
-import com.code.springmvcgenerator.utils.Util;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -26,11 +22,8 @@ public class ZipService {
     }
 
     public void zipEntities(List<EntityDetail> eds, String filesFolder, String zipName) {
-        Util.clearFolder(filesFolder);
-
         // Create java class files for each entityDetail
         List<File> files = createEntityFiles(eds, filesFolder);
-
 
         // Add files to zip
         zipFiles(files, zipName);
