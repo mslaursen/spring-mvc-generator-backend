@@ -1,17 +1,19 @@
 package com.code.springmvcgenerator.controller;
 
-import com.code.springmvcgenerator.entity.ClassDetail;
 import com.code.springmvcgenerator.entity.EntityDetail;
-import com.code.springmvcgenerator.service.ClassDetailService;
 import com.code.springmvcgenerator.service.EntityDetailService;
-import com.code.springmvcgenerator.service.ExportService;
-import com.code.springmvcgenerator.utils.Util;
+import com.code.springmvcgenerator.service.ZipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -20,31 +22,31 @@ import java.util.List;
 public class EntityDetailController {
 
     private final EntityDetailService entityDetailService;
-    private final ClassDetailService classDetailService;
-    private final ExportService exportService;
+    private final ZipService zipService;
 
     @Autowired
-    public EntityDetailController(EntityDetailService entityDetailService, ClassDetailService classDetailService, ExportService exportService) {
+    public EntityDetailController(EntityDetailService entityDetailService, ZipService zipService) {
         this.entityDetailService = entityDetailService;
-        this.classDetailService = classDetailService;
-        this.exportService = exportService;
+        this.zipService = zipService;
     }
 
 
-
-
-    @PostMapping("/export")
-    public void exportZip(@RequestBody List<EntityDetail> eds, HttpServletResponse response) {
-        String zipFolder = "files-test";
+    @GetMapping("/download")
+    public ResponseEntity<Resource> download(@RequestBody List<EntityDetail> eds) throws FileNotFoundException {
+        String filesFolder = "files-test";
         String zipName = "test.zip";
 
-        Util.clearFolder(zipFolder);
+        zipService.zipEntities(eds, filesFolder, zipName);
 
-        List<ClassDetail> classes = classDetailService.getAllClasses(eds);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.addHeader("Content-Disposition", "attachment; filename=\"" + zipName + "\"");
+        File zipFile = new File(zipName);
 
-        exportService.exportZipWithClasses(response, classes, zipFolder);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())
+                .contentLength(zipFile.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
     @PostMapping
