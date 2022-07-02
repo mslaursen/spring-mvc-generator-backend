@@ -1,7 +1,7 @@
 package com.code.springmvcgenerator.service;
 
-import com.code.springmvcgenerator.entity.ClassDetail;
-import com.code.springmvcgenerator.entity.EntityDetail;
+import com.code.springmvcgenerator.wrapper.ClassWrapper;
+import com.code.springmvcgenerator.entity.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +14,14 @@ import java.util.zip.ZipOutputStream;
 @Service
 public class ZipService {
 
-    private final ClassDetailService classDetailService;
+    private final TransformService transformService;
 
     @Autowired
-    public ZipService(ClassDetailService classDetailService) {
-        this.classDetailService = classDetailService;
+    public ZipService(TransformService transformService) {
+        this.transformService = transformService;
     }
 
-    public void zipEntities(List<EntityDetail> eds, String filesFolder, String zipName) {
+    public void zipEntities(List<Entity> eds, String filesFolder, String zipName) {
         // Create java class files for each entityDetail
         List<File> files = createEntityFiles(eds, filesFolder);
 
@@ -52,13 +52,13 @@ public class ZipService {
         }
     }
 
-    private List<File> createEntityFiles(List<EntityDetail> eds, String fileFolder) {
+    private List<File> createEntityFiles(List<Entity> eds, String fileFolder) {
         ArrayList<File> files = new ArrayList<>();
-        List<ClassDetail> classes = classDetailService.getAllClasses(eds);
+        List<ClassWrapper> classes = transformService.getAllClasses(eds);
 
         try {
 
-            for (ClassDetail c : classes) {
+            for (ClassWrapper c : classes) {
                 String filePath = fileFolder + "/" + c.getName() + ".java";
                 File newFile = new File(filePath);
 

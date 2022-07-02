@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@Entity
+@javax.persistence.Entity
 public class Variable {
 
     @Id
@@ -25,5 +25,5 @@ public class Variable {
     @ManyToOne
     @JoinColumn(name = "entity_detail_id")
     @JsonBackReference(value = "variableJbr")
-    private EntityDetail entityDetail;
+    private Entity entity;
 }

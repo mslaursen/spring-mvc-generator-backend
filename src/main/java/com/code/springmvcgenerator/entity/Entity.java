@@ -10,8 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Entity
-public class EntityDetail {
+@javax.persistence.Entity
+public class Entity {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -21,11 +21,11 @@ public class EntityDetail {
     private String name;
     private String namePlural;
 
-    @OneToMany(mappedBy = "entityDetail", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
     @ToString.Exclude
     private List<Variable> variables;
 
-    @OneToMany(mappedBy = "entityDetail", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
     @ToString.Exclude
     private List<Relation> relations;
 

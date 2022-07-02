@@ -1,4 +1,4 @@
-package com.code.springmvcgenerator.entity;
+package com.code.springmvcgenerator.wrapper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Setter
 @ToString
 
-public class ClassDetail {
+public class ClassWrapper {
 
     private String name;
     private String content;

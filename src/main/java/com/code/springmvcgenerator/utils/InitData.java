@@ -1,8 +1,8 @@
 package com.code.springmvcgenerator.utils;
 
-import com.code.springmvcgenerator.entity.EntityDetail;
+import com.code.springmvcgenerator.entity.Entity;
 import com.code.springmvcgenerator.entity.Variable;
-import com.code.springmvcgenerator.service.EntityDetailService;
+import com.code.springmvcgenerator.service.EntityService;
 import com.code.springmvcgenerator.service.RelationService;
 import com.code.springmvcgenerator.service.VariableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,42 +12,42 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitData implements CommandLineRunner {
 
-    private final EntityDetailService entityDetailService;
+    private final EntityService entityService;
     private final RelationService relationService;
     private final VariableService variableService;
 
     @Autowired
-    public InitData(EntityDetailService entityDetailService, RelationService relationService, VariableService variableService) {
-        this.entityDetailService = entityDetailService;
+    public InitData(EntityService entityService, RelationService relationService, VariableService variableService) {
+        this.entityService = entityService;
         this.relationService = relationService;
         this.variableService = variableService;
     }
 
     @Override
     public void run(String... args) {
-        EntityDetail entityDetail = new EntityDetail();
-        entityDetail.setName("City");
-        entityDetail.setNamePlural("cities");
-        entityDetail.setHasCreate(true);
-        entityDetail.setHasRead(true);
-        entityDetail.setHasUpdate(false);
-        entityDetail.setHasDelete(false);
-        entityDetailService.save(entityDetail);
+        Entity entity = new Entity();
+        entity.setName("City");
+        entity.setNamePlural("cities");
+        entity.setHasCreate(true);
+        entity.setHasRead(true);
+        entity.setHasUpdate(false);
+        entity.setHasDelete(false);
+        entityService.save(entity);
 
         Variable v1 = new Variable();
         v1.setVal1("Integer");
         v1.setVal2("AgeLimit");
         v1.setVal3("age_limit");
-        v1.setEntityDetail(entityDetail);
+        v1.setEntity(entity);
         variableService.save(v1);
 
-        EntityDetail entityDetail2 = new EntityDetail();
-        entityDetail2.setName("City2");
-        entityDetail2.setNamePlural("cities");
-        entityDetail2.setHasCreate(true);
-        entityDetail2.setHasRead(true);
-        entityDetail2.setHasUpdate(false);
-        entityDetail2.setHasDelete(false);
-        entityDetailService.save(entityDetail2);
+        Entity entity2 = new Entity();
+        entity2.setName("City2");
+        entity2.setNamePlural("cities");
+        entity2.setHasCreate(true);
+        entity2.setHasRead(true);
+        entity2.setHasUpdate(false);
+        entity2.setHasDelete(false);
+        entityService.save(entity2);
     }
 }
