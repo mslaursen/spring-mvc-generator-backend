@@ -25,10 +25,10 @@ public class TransformService {
     private List<ClassWrapper> getClasses(Entity entity) {
         List<ClassWrapper> classes = new ArrayList<>();
 
-        //classes.add(toClassByType(entity, ClassType.ENTITY));
+        classes.add(toClassByType(entity, ClassType.ENTITY));
         classes.add(toClassByType(entity, ClassType.CONTROLLER));
-        //classes.add(toClassByType(entity, ClassType.SERVICE));
-        //classes.add(toClassByType(entity, ClassType.REPOSITORY));
+        classes.add(toClassByType(entity, ClassType.SERVICE));
+        classes.add(toClassByType(entity, ClassType.REPOSITORY));
 
         return classes;
     }
@@ -67,8 +67,6 @@ public class TransformService {
         }
     }
 
-    //
-
     private ClassWrapper toEntityClass(Entity entity) {
         StringBuilder content = new StringBuilder();
 
@@ -79,6 +77,8 @@ public class TransformService {
         addClassHeader(content, ClassType.ENTITY, entity.getName());
 
         addId(content);
+
+        breakLine(content);
         
         for (Relation relation : entity.getRelations()) {
             addRelation(content, relation, entity.getName());
@@ -88,6 +88,8 @@ public class TransformService {
         for (Variable variable : entity.getVariables()) {
             addVariable(content, variable);
         }
+
+        newLine(content, "}");
         
         ClassWrapper classWrapper = new ClassWrapper();
         classWrapper.setName(entity.getName());
@@ -104,8 +106,6 @@ public class TransformService {
         newLine(content, "@CrossOrigin");
         addClassHeader(content, ClassType.CONTROLLER, entity.getName() + "Controller");
 
-        // -- inject service
-
         newLineSpaced(content, "private final " + entity.getName()
                 + "Service " + entity.getName().toLowerCase() + "Service;", getSpaces(spacing));
         breakLine(content);
@@ -114,52 +114,102 @@ public class TransformService {
         addConstructor(content, entity.getName(), ClassType.CONTROLLER, ClassType.SERVICE);
         breakLine(content);
 
-        // -- crud methods
+        addCrud(content, entity, ClassType.CONTROLLER);
 
-        if (entity.getHasCreate()) {
-            addCreate(content, entity.getName(), ClassType.CONTROLLER);
-            breakLine(content);
-        }
-
-        if (entity.getHasReadAll()) {
-            addReadAll(content, entity.getName(), ClassType.CONTROLLER);
-            breakLine(content);
-        }
-
-        if (entity.getHasRead()) {
-            addRead(content, entity.getName(), ClassType.CONTROLLER);
-            breakLine(content);
-        }
-
-        if (entity.getHasUpdate()) {
-            addUpdate(content, entity, ClassType.CONTROLLER);
-            breakLine(content);
-        }
-
-        if (entity.getHasDelete()) {
-            addDelete(content, entity.getName(), ClassType.CONTROLLER);
-            breakLine(content);
-        }
+        newLine(content, "}");
 
         ClassWrapper classWrapper = new ClassWrapper();
         classWrapper.setName(entity.getName());
         classWrapper.setContent(content.toString());
 
-        System.out.println(content);
         return classWrapper;
     }
 
-    // crud
+    private ClassWrapper toServiceClass(Entity entity) {
+        StringBuilder content = new StringBuilder();
+
+        newLine(content, "@Service");
+        addClassHeader(content, ClassType.SERVICE, entity.getName() + "Service");
+
+        newLineSpaced(content, "private final " + entity.getName()
+                + "Repository " + entity.getName().toLowerCase() + "Repository;", getSpaces(spacing));
+        breakLine(content);
+
+        newLineSpaced(content, "@Autowired", getSpaces(spacing));
+        addConstructor(content, entity.getName(), ClassType.SERVICE, ClassType.REPOSITORY);
+        breakLine(content);
+        
+        addCrud(content, entity, ClassType.SERVICE);
+
+        newLine(content, "}");
+
+        ClassWrapper classWrapper = new ClassWrapper();
+        classWrapper.setName(entity.getName());
+        classWrapper.setContent(content.toString());
+
+        return classWrapper;
+    }
+
+    private ClassWrapper toRepositoryInterface(Entity entity) {
+        StringBuilder content = new StringBuilder();
+
+        newLine(content, "public interface " + entity.getName()
+                + "Repository extends JpaRepository<" + entity.getName() + ", Long> {");
+        newLine(content, "}");
+
+        ClassWrapper classWrapper = new ClassWrapper();
+        classWrapper.setName(entity.getName());
+        classWrapper.setContent(content.toString());
+
+        return classWrapper;
+    }
+
+    private void addCrud(StringBuilder content, Entity entity, ClassType type) {
+        if (entity.getHasCreate()) {
+            addCreate(content, entity.getName(), type);
+            breakLine(content);
+        }
+
+        if (entity.getHasReadAll()) {
+            addReadAll(content, entity.getName(), type);
+            breakLine(content);
+        }
+
+        if (entity.getHasRead()) {
+            addRead(content, entity.getName(), type);
+            breakLine(content);
+        }
+
+        if (entity.getHasUpdate()) {
+            addUpdate(content, entity, type);
+            breakLine(content);
+        }
+
+        if (entity.getHasDelete()) {
+            addDelete(content, entity.getName(), type);
+            breakLine(content);
+        }
+    }
 
     private void addCreate(StringBuilder content, String name, ClassType type) {
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@PostMapping", getSpaces(spacing));
-            newLineSpaced(content, "public ResponseEntity<" + name + "> create(@RequestBody " + name + " " + Util.decapitalize(name) + ") {", getSpaces(spacing));
-            newLineSpaced(content, name + " saved" + name + " = " + Util.decapitalize(name) + "Service.save(" + Util.decapitalize(name) + ");", getSpaces((byte) (spacing * 2)));
+            newLineSpaced(content, "public ResponseEntity<" + name + "> create(@RequestBody "
+                    + name + " " + Util.decapitalize(name) + ") {", getSpaces(spacing));
+
+            newLineSpaced(content, name + " saved" + name + " = " + Util.decapitalize(name)
+                    + "Service.save(" + Util.decapitalize(name) + ");", getSpaces((byte) (spacing * 2)));
+
             returnResponseEntity(content, "saved" + name);
         }
         else if (type == ClassType.SERVICE) {
+            newLineSpaced(content, "public " + name + " save("
+                    + name + " " + Util.decapitalize(name) + ") {", getSpaces(spacing));
 
+            newLineSpaced(content, "return " + Util.decapitalize(name)
+                    + "Repository.save(" + Util.decapitalize(name) + ");", getSpaces((byte) (spacing * 2)));
+
+            newLineSpaced(content, "}", getSpaces(spacing));
         }
     }
 
@@ -167,58 +217,100 @@ public class TransformService {
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@GetMapping", getSpaces(spacing));
             newLineSpaced(content, "public ResponseEntity<List<" + name + ">> fetchAll() {", getSpaces(spacing));
-            newLineSpaced(content, "List<" + name + "> found = " + Util.decapitalize(name) + "Service.findAll();", getSpaces((byte) (spacing * 2)));
+
+            newLineSpaced(content, "List<" + name + "> found = "
+                    + Util.decapitalize(name) + "Service.findAll();", getSpaces((byte) (spacing * 2)));
+
             returnResponseEntity(content, "found");
         }
         else if (type == ClassType.SERVICE) {
+            newLineSpaced(content, "public List<" + name + "> findAll("
+                    + name + " " + Util.decapitalize(name) + ") {", getSpaces(spacing));
 
+            newLineSpaced(content, "return " + Util.decapitalize(name) + "Repository.findAll("
+                    + Util.decapitalize(name) + ");", getSpaces((byte) (spacing * 2)));
+
+            newLineSpaced(content, "}", getSpaces(spacing));
         }
     }
 
     private void addRead(StringBuilder content, String name, ClassType type) {
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@GetMapping(\"/{id}\")", getSpaces(spacing));
-            newLineSpaced(content, "public ResponseEntity<" + name + "> fetchById(@PathVariable Long id) {", getSpaces(spacing));
-            newLineSpaced(content, name + " found = " + Util.decapitalize(name) + "Service.findById(id);", getSpaces((byte) (spacing * 2)));
+            newLineSpaced(content, "public ResponseEntity<" + name
+                    + "> fetchById(@PathVariable Long id) {", getSpaces(spacing));
+
+            newLineSpaced(content, name + " found = " + Util.decapitalize(name)
+                    + "Service.findById(id);", getSpaces((byte) (spacing * 2)));
+
             returnResponseEntity(content, "found");
         }
         else if (type == ClassType.SERVICE) {
+            newLineSpaced(content, "public " + name + " findById(Long id) {", getSpaces(spacing));
 
+            newLineSpaced(content, "return " + Util.decapitalize(name)
+                    + "Repository.findById(id).orElseThrow();", getSpaces((byte) (spacing * 2)));
+
+            newLineSpaced(content, "}", getSpaces(spacing));
         }
     }
 
     private void addUpdate(StringBuilder content, Entity entity, ClassType type) {
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@PutMapping(\"/{id}\")", getSpaces(spacing));
-            newLineSpaced(content, "public ResponseEntity<" + entity.getName() + "> updateById(@RequestBody "+ entity.getName() + " " + Util.decapitalize(entity.getName()) + ", @PathVariable Long id) {", getSpaces(spacing));
-            newLineSpaced(content, entity.getName() + " toUpdate = " + Util.decapitalize(entity.getName()) + "Service.findById(id);", getSpaces((byte) (spacing * 2)));
+
+            newLineSpaced(content, "public ResponseEntity<" + entity.getName()
+                    + "> updateById(@RequestBody " + entity.getName() + " "
+                    + Util.decapitalize(entity.getName()) + ", @PathVariable Long id) {", getSpaces(spacing));
+
+            newLineSpaced(content, entity.getName() + " toUpdate = "
+                    + Util.decapitalize(entity.getName()) + "Service.findById(id);", getSpaces((byte) (spacing * 2)));
 
             for (Variable v : entity.getVariables()) {
-                newLineSpaced(content, "toUpdate.set" + Util.capitalize(v.getName()) + "(" + Util.decapitalize(entity.getName()) + ".get" + Util.capitalize(v.getName()) + "());", getSpaces((byte) (spacing*2)));
+                newLineSpaced(content, "toUpdate.set" + Util.capitalize(v.getName()) + "("
+                        + Util.decapitalize(entity.getName()) + ".get"
+                        + Util.capitalize(v.getName()) + "());", getSpaces((byte) (spacing*2)));
             }
 
             breakLine(content);
-            newLineSpaced(content, entity.getName() + " updated = " + Util.decapitalize(entity.getName()) + "Service.update(toUpdate);", getSpaces((byte) (spacing * 2)));
+            newLineSpaced(content, entity.getName() + " updated = "
+                    + Util.decapitalize(entity.getName())
+                    + "Service.update(toUpdate);", getSpaces((byte) (spacing * 2)));
+
             returnResponseEntity(content, "updated");
         }
         else if (type == ClassType.SERVICE) {
+            newLineSpaced(content, "public " + entity.getName()
+                    + " update(" + entity.getName() + " toUpdate) {", getSpaces(spacing));
 
+            newLineSpaced(content, "return " + Util.decapitalize(entity.getName())
+                    + "Repository.save(toUpdate);", getSpaces((byte) (spacing * 2)));
+
+            newLineSpaced(content, "}", getSpaces(spacing));
         }
     }
 
     private void addDelete(StringBuilder content, String name, ClassType type) {
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@DeleteMapping(\"/{id}\")", getSpaces(spacing));
-            newLineSpaced(content, "public ResponseEntity<Object> deleteById(@PathVariable Long id) {", getSpaces(spacing));
-            newLineSpaced(content, Util.decapitalize(name) + "Service.deleteById(id);", getSpaces((byte) (spacing * 2)));
+            newLineSpaced(content, "public ResponseEntity<Object> deleteById(@PathVariable Long id) {",
+                    getSpaces(spacing));
+
+            newLineSpaced(content, Util.decapitalize(name) + "Service.deleteById(id);",
+                    getSpaces((byte) (spacing * 2)));
+
             returnBodylessResponseEntity(content);
         }
         else if (type == ClassType.SERVICE) {
+            newLineSpaced(content, "public " + name + " deleteById(Long id) {",
+                    getSpaces(spacing));
 
+            newLineSpaced(content, Util.decapitalize(name) + "Repository.deleteById(id);",
+                    getSpaces((byte) (spacing * 2)));
+
+            newLineSpaced(content, "}", getSpaces(spacing));
         }
     }
-
-    //
 
     private void addConstructor(StringBuilder content, String entityName, ClassType type1, ClassType type2) {
         newLineSpaced(content, "public " + entityName
@@ -233,16 +325,6 @@ public class TransformService {
 
         newLineSpaced(content, "}", getSpaces(spacing));
     }
-
-    private ClassWrapper toServiceClass(Entity entity) {
-        return null;
-    }
-
-    private ClassWrapper toRepositoryInterface(Entity entity) {
-        return null;
-    }
-
-    // String constructor methods
 
     private void addClassHeader(StringBuilder content, ClassType classType, String className) {
         String type = "";
@@ -285,14 +367,17 @@ public class TransformService {
     }
 
     private void addId(StringBuilder content) {
-
+        newLineSpaced(content, "@Id", getSpaces(spacing));
+        newLineSpaced(content, "@Column(name = \"id\", nullable = false)", getSpaces(spacing));
+        newLineSpaced(content, "@GeneratedValue(strategy = GenerationType.IDENTITY)", getSpaces(spacing));
     }
 
     private void addVariable(StringBuilder content, Variable variable) {
         if (variable.getColumnName() != null && !variable.getColumnName().isEmpty()) {
             newLineSpaced(content, "@Column(name = \"" + variable.getColumnName() + "\")", getSpaces(spacing));
         }
-        newLineSpaced(content, "private " + variable.getDataType() + " " + variable.getName() + ";", getSpaces(spacing));
+        newLineSpaced(content, "private " + variable.getDataType()
+                + " " + variable.getName() + ";", getSpaces(spacing));
     }
 
     private void addRelation(StringBuilder content, Relation relation, String entityName) {
@@ -318,19 +403,6 @@ public class TransformService {
         breakLine(content);
 
 
-    }
-
-
-    private String addMethod(String modifier, String dataType, String name) {
-        return null;
-    }
-
-    private String addMethodContentLine(String variableName, String dataType, String value) {
-        return null;
-    }
-
-    private String returnValue(String value) {
-        return null;
     }
 
     private void returnResponseEntity(StringBuilder content, String entityName) {
