@@ -18,12 +18,11 @@ public class Variable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String val1;
-    private String val2;
-    private String val3;
+    private String name;
+    private String dataType;
+    private String columnName;
 
     @ManyToOne
     @JoinColumn(name = "entity_detail_id")
-    @JsonBackReference(value = "variableJbr")
     private Entity entity;
 }

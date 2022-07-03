@@ -2,19 +2,21 @@ package com.code.springmvcgenerator.service;
 
 import com.code.springmvcgenerator.constants.ClassType;
 import com.code.springmvcgenerator.entity.Entity;
+import com.code.springmvcgenerator.entity.Relation;
+import com.code.springmvcgenerator.entity.Variable;
 import com.code.springmvcgenerator.utils.Util;
 import com.code.springmvcgenerator.wrapper.ClassWrapper;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TransformService {
 
     private byte spacing = 4;
-    private final String SPACES = " ".repeat(spacing);
-
 
    // public TransformService(byte spacing) {
    //     this.spacing = spacing;
@@ -24,9 +26,9 @@ public class TransformService {
         List<ClassWrapper> classes = new ArrayList<>();
 
         classes.add(toClassByType(entity, ClassType.ENTITY));
-        classes.add(toClassByType(entity, ClassType.CONTROLLER));
-        classes.add(toClassByType(entity, ClassType.SERVICE));
-        classes.add(toClassByType(entity, ClassType.REPOSITORY));
+        //classes.add(toClassByType(entity, ClassType.CONTROLLER));
+        //classes.add(toClassByType(entity, ClassType.SERVICE));
+        //classes.add(toClassByType(entity, ClassType.REPOSITORY));
 
         return classes;
     }
@@ -70,14 +72,28 @@ public class TransformService {
     private ClassWrapper toEntityClass(Entity entity) {
         StringBuilder content = new StringBuilder();
 
+        newLine(content, "@Getter");
+        newLine(content, "@Setter");
+        newLine(content, "@ToString");
+        newLine(content, "@Entity");
         addClassHeader(content, ClassType.ENTITY, entity.getName());
 
+        addId(content);
+        
+        for (Relation relation : entity.getRelations()) {
+            addRelation(content, relation, entity.getName());
+            breakLine(content);
+        }
 
-
+        for (Variable variable : entity.getVariables()) {
+            addVariable(content, variable);
+        }
+        
         ClassWrapper classWrapper = new ClassWrapper();
         classWrapper.setName(entity.getName());
         classWrapper.setContent(content.toString());
 
+        System.out.println(content);
         return classWrapper;
     }
 
@@ -95,25 +111,82 @@ public class TransformService {
 
     // String constructor methods
 
-    private void addClassHeader(StringBuilder sb, ClassType classType, String className) {
-        sb.append("public ")
-                .append(Util.capitalize(classType.toString().toLowerCase()))
+    private void addClassHeader(StringBuilder content, ClassType classType, String className) {
+        String type = "";
+        switch (classType) {
+            case ENTITY, CONTROLLER, SERVICE -> type = "class";
+            case REPOSITORY -> type = "interface";
+        }
+
+        content.append("public ")
+                .append(type)
+                .append(" ")
                 .append(className)
-                .append(" {\n\n");
+                .append(" {");
+        breakLine(content);
+        breakLine(content);
+    }
+
+    private void newLine(StringBuilder content, String str) {
+        content.append(str);
+        breakLine(content);
+    }
+
+    private void newLineSpaced(StringBuilder content, String str, String spacing) {
+        content.append(spacing);
+        content.append(str);
+        breakLine(content);
+    }
+    
+    private void line(StringBuilder content, String str) {
+        content.append(str);
+    }
+
+    private void lineSpaced(StringBuilder sb, String str, String spacing) {
+        sb.append(spacing);
+        sb.append(str);
+    }
+
+    private void breakLine(StringBuilder sb) {
+        sb.append("\n");
+    }
+
+    private void addId(StringBuilder content) {
 
     }
 
-    private void newLine(String str, byte spacing) {
+    private void addVariable(StringBuilder content, Variable variable) {
+        if (variable.getColumnName() != null && !variable.getColumnName().isEmpty()) {
+            newLineSpaced(content, "@Column(name = \"" + variable.getColumnName() + "\")", getSpaces(spacing));
+        }
+        newLineSpaced(content, "private " + variable.getDataType() + " " + variable.getName() + ";", getSpaces(spacing));
+    }
+
+    private void addRelation(StringBuilder content, Relation relation, String entityName) {
+
+        if (Objects.equals(relation.getAnnotation(), "OneToMany")) {
+            newLineSpaced(content, "@" + relation.getAnnotation() + "(mappedBy = \""
+                    + Util.decapitalize(entityName) + "\", cascade = CascadeType.MERGE)" , getSpaces(spacing));
+
+            newLineSpaced(content, "@ToString.Exclude", getSpaces(spacing));
+
+            lineSpaced(content, "private List<"
+                    + relation.getRelatedTo() + "> "
+                    + Util.decapitalize(relation.getRelatedTo()) + "List", getSpaces(spacing));
+        } else {
+            newLineSpaced(content, "@" + relation.getAnnotation(), getSpaces(spacing));
+
+            newLineSpaced(content, "@JoinColumn(name = \""
+                    + Util.decapitalize(relation.getRelatedTo()) + "_id\")", getSpaces(spacing));
+
+            lineSpaced(content, "private " + relation.getRelatedTo()
+                    + " " + Util.decapitalize(relation.getRelatedTo()), getSpaces(spacing));
+        }
+        breakLine(content);
+
 
     }
 
-    private void addId() {
-
-    }
-
-    private String addVariable(String modifier, String dataType, String name) {
-        return null;
-    }
 
     private String addMethod(String modifier, String dataType, String name) {
         return null;
@@ -125,5 +198,9 @@ public class TransformService {
 
     private String returnValue(String value) {
         return null;
+    }
+
+    private String getSpaces(byte spacing) {
+        return " ".repeat(spacing);
     }
 }

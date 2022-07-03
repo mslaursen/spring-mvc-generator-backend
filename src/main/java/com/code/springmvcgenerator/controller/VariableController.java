@@ -39,9 +39,9 @@ public class VariableController {
 
         Variable variableToUpdate = variableService.findById(id);
 
-        variableToUpdate.setVal1(variable.getVal1());
-        variableToUpdate.setVal2(variable.getVal2());
-        variableToUpdate.setVal3(variable.getVal3());
+        variableToUpdate.setName(variable.getName());
+        variableToUpdate.setDataType(variable.getDataType());
+        variableToUpdate.setColumnName(variable.getColumnName());
 
         Variable updatedVariable = variableService.update(variableToUpdate);
 

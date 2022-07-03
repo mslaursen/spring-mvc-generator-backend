@@ -39,17 +39,18 @@ public class ProjectController {
 
         zipService.zipEntities(project.getEntities(), filesFolder, zipName);
 
-        File zipFile = new File(zipName);
+        //File zipFile = new File(zipName);
+//
+        //InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
+//
+        //Util.clearFolder(filesFolder);
 
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
-
-        Util.clearFolder(filesFolder);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())
-                .contentLength(zipFile.length())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
+        return null;
+        //return ResponseEntity.ok()
+        //        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())
+        //        .contentLength(zipFile.length())
+        //        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+        //        .body(resource);
     }
 
     @PostMapping

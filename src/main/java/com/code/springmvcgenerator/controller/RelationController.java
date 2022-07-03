@@ -39,9 +39,8 @@ public class RelationController {
 
         Relation relationToUpdate = relationService.findById(id);
 
-        relationToUpdate.setVal1(relation.getVal1());
-        relationToUpdate.setVal2(relation.getVal2());
-        relationToUpdate.setVal3(relation.getVal3());
+        relationToUpdate.setAnnotation(relation.getAnnotation());
+        relationToUpdate.setRelatedTo(relation.getRelatedTo());
 
         Relation updatedRelation = relationService.update(relationToUpdate);
 
