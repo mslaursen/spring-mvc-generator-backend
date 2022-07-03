@@ -31,26 +31,6 @@ public class EntityController {
         this.zipService = zipService;
     }
 
-    @PostMapping("/download")
-    public ResponseEntity<Resource> download(@RequestBody List<Entity> eds) throws FileNotFoundException {
-        String filesFolder = "files-test";
-        String zipName = "test.zip";
-
-        zipService.zipEntities(eds, filesFolder, zipName);
-
-        File zipFile = new File(zipName);
-
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
-
-        Util.clearFolder(filesFolder);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())
-                .contentLength(zipFile.length())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
-    }
-
     @PostMapping
     public ResponseEntity<Entity> create(@RequestBody Entity entity) {
         Entity savedEntity = entityService.save(entity);
