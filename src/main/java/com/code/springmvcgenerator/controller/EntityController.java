@@ -15,12 +15,10 @@ import java.util.List;
 public class EntityController {
 
     private final EntityService entityService;
-    private final ZipService zipService;
 
     @Autowired
-    public EntityController(EntityService entityService, ZipService zipService) {
+    public EntityController(EntityService entityService) {
         this.entityService = entityService;
-        this.zipService = zipService;
     }
 
     @PostMapping
@@ -46,7 +44,6 @@ public class EntityController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Entity> updateById(@RequestBody Entity entity, @PathVariable Long id) {
-        System.out.println(id);
         Entity entityToUpdate = entityService.findById(id);
         entityToUpdate.setName(entity.getName());
         entityToUpdate.setHasCreate(entity.getHasCreate());
