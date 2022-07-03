@@ -1,6 +1,5 @@
 package com.code.springmvcgenerator.controller;
 
-import com.code.springmvcgenerator.entity.Entity;
 import com.code.springmvcgenerator.entity.Project;
 import com.code.springmvcgenerator.service.ProjectService;
 import com.code.springmvcgenerator.service.ZipService;

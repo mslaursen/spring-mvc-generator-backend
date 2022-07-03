@@ -6,7 +6,6 @@ import com.code.springmvcgenerator.entity.Relation;
 import com.code.springmvcgenerator.entity.Variable;
 import com.code.springmvcgenerator.utils.Util;
 import com.code.springmvcgenerator.wrapper.ClassWrapper;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
