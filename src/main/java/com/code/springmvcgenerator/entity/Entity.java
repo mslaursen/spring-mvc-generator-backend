@@ -31,7 +31,6 @@ public class Entity {
     private List<Relation> relations;
 
     private String name;
-    private String namePlural;
 
     private Boolean hasCreate;
     private Boolean hasRead;

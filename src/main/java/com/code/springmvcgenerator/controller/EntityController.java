@@ -3,18 +3,10 @@ package com.code.springmvcgenerator.controller;
 import com.code.springmvcgenerator.entity.Entity;
 import com.code.springmvcgenerator.service.EntityService;
 import com.code.springmvcgenerator.service.ZipService;
-import com.code.springmvcgenerator.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 @RestController
@@ -57,7 +49,6 @@ public class EntityController {
         System.out.println(id);
         Entity entityToUpdate = entityService.findById(id);
         entityToUpdate.setName(entity.getName());
-        entityToUpdate.setNamePlural(entity.getNamePlural());
         entityToUpdate.setHasCreate(entity.getHasCreate());
         entityToUpdate.setHasRead(entity.getHasRead());
         entityToUpdate.setHasUpdate(entity.getHasUpdate());

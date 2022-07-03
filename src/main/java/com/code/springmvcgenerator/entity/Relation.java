@@ -23,6 +23,5 @@ public class Relation {
 
     @ManyToOne
     @JoinColumn(name = "entity_detail_id")
-    @JsonBackReference(value = "relationJbr")
     private Entity entity;
 }

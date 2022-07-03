@@ -27,7 +27,7 @@ public class InitData implements CommandLineRunner {
     public void run(String... args) {
         Entity entity = new Entity();
         entity.setName("City");
-        entity.setNamePlural("cities");
+
         entity.setHasCreate(true);
         entity.setHasRead(true);
         entity.setHasUpdate(false);
@@ -43,7 +43,6 @@ public class InitData implements CommandLineRunner {
 
         Entity entity2 = new Entity();
         entity2.setName("City2");
-        entity2.setNamePlural("cities");
         entity2.setHasCreate(true);
         entity2.setHasRead(true);
         entity2.setHasUpdate(false);

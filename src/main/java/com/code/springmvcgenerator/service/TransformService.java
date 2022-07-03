@@ -25,8 +25,8 @@ public class TransformService {
     private List<ClassWrapper> getClasses(Entity entity) {
         List<ClassWrapper> classes = new ArrayList<>();
 
-        classes.add(toClassByType(entity, ClassType.ENTITY));
-        //classes.add(toClassByType(entity, ClassType.CONTROLLER));
+        //classes.add(toClassByType(entity, ClassType.ENTITY));
+        classes.add(toClassByType(entity, ClassType.CONTROLLER));
         //classes.add(toClassByType(entity, ClassType.SERVICE));
         //classes.add(toClassByType(entity, ClassType.REPOSITORY));
 
@@ -93,12 +93,27 @@ public class TransformService {
         classWrapper.setName(entity.getName());
         classWrapper.setContent(content.toString());
 
-        System.out.println(content);
         return classWrapper;
     }
 
     private ClassWrapper toControllerClass(Entity entity) {
-        return null;
+        StringBuilder content = new StringBuilder();
+
+        newLine(content, "@RestController");
+        newLine(content, "@RequestMapping(\"/api/" + Util.pluralize(entity.getName()) + "\")");
+        newLine(content, "@CrossOrigin");
+        addClassHeader(content, ClassType.ENTITY, entity.getName());
+
+        // --
+
+        // --
+
+        ClassWrapper classWrapper = new ClassWrapper();
+        classWrapper.setName(entity.getName());
+        classWrapper.setContent(content.toString());
+
+        System.out.println(content);
+        return classWrapper;
     }
 
     private ClassWrapper toServiceClass(Entity entity) {
