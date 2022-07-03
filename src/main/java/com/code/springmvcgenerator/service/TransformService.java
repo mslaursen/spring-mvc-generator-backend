@@ -39,7 +39,6 @@ public class TransformService {
             classes.addAll(getClasses(ed));
         }
 
-        System.out.println(classes.size());
         return classes;
     }
 
@@ -224,11 +223,10 @@ public class TransformService {
             returnResponseEntity(content, "found");
         }
         else if (type == ClassType.SERVICE) {
-            newLineSpaced(content, "public List<" + name + "> findAll("
-                    + name + " " + Util.decapitalize(name) + ") {", getSpaces(spacing));
+            newLineSpaced(content, "public List<" + name + "> findAll() {", getSpaces(spacing));
 
-            newLineSpaced(content, "return " + Util.decapitalize(name) + "Repository.findAll("
-                    + Util.decapitalize(name) + ");", getSpaces((byte) (spacing * 2)));
+            newLineSpaced(content, "return " + Util.decapitalize(name) + "Repository.findAll();"
+                    , getSpaces((byte) (spacing * 2)));
 
             newLineSpaced(content, "}", getSpaces(spacing));
         }
@@ -302,7 +300,7 @@ public class TransformService {
             returnBodylessResponseEntity(content);
         }
         else if (type == ClassType.SERVICE) {
-            newLineSpaced(content, "public " + name + " deleteById(Long id) {",
+            newLineSpaced(content, "public void deleteById(Long id) {",
                     getSpaces(spacing));
 
             newLineSpaced(content, Util.decapitalize(name) + "Repository.deleteById(id);",
@@ -398,7 +396,7 @@ public class TransformService {
                     + Util.decapitalize(relation.getRelatedTo()) + "_id\")", getSpaces(spacing));
 
             lineSpaced(content, "private " + relation.getRelatedTo()
-                    + " " + Util.decapitalize(relation.getRelatedTo()), getSpaces(spacing));
+                    + " " + Util.decapitalize(relation.getRelatedTo()) + ";", getSpaces(spacing));
         }
         breakLine(content);
     }

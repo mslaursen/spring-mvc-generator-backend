@@ -1,5 +1,6 @@
 package com.code.springmvcgenerator.entity;
 
+import com.code.springmvcgenerator.entity.Project;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,21 +12,17 @@ import java.util.List;
 @Setter
 @ToString
 @javax.persistence.Entity
-public class Project {
+public class User {
 
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     @ToString.Exclude
-    private List<Entity> entities;
+    private List<Project> projectList;
 
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
+    private String username;
+    private String password;
 }
