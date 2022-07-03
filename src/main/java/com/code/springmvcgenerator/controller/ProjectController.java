@@ -37,20 +37,19 @@ public class ProjectController {
         String filesFolder = "files-test";
         String zipName = "test.zip";
 
+        Util.clearFolder(filesFolder);
+
         zipService.zipEntities(project.getEntities(), filesFolder, zipName);
 
-        //File zipFile = new File(zipName);
-//
-        //InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
-//
-        //Util.clearFolder(filesFolder);
+        File zipFile = new File(zipName);
 
-        return null;
-        //return ResponseEntity.ok()
-        //        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())
-        //        .contentLength(zipFile.length())
-        //        .contentType(MediaType.APPLICATION_OCTET_STREAM)
-        //        .body(resource);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())
+                .contentLength(zipFile.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
     }
 
     @PostMapping

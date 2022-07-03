@@ -40,6 +40,7 @@ public class TransformService {
             classes.addAll(getClasses(ed));
         }
 
+        System.out.println(classes.size());
         return classes;
     }
 
@@ -119,7 +120,7 @@ public class TransformService {
         newLine(content, "}");
 
         ClassWrapper classWrapper = new ClassWrapper();
-        classWrapper.setName(entity.getName());
+        classWrapper.setName(entity.getName() + "Controller");
         classWrapper.setContent(content.toString());
 
         return classWrapper;
@@ -144,7 +145,7 @@ public class TransformService {
         newLine(content, "}");
 
         ClassWrapper classWrapper = new ClassWrapper();
-        classWrapper.setName(entity.getName());
+        classWrapper.setName(entity.getName() + "Service");
         classWrapper.setContent(content.toString());
 
         return classWrapper;
@@ -158,7 +159,7 @@ public class TransformService {
         newLine(content, "}");
 
         ClassWrapper classWrapper = new ClassWrapper();
-        classWrapper.setName(entity.getName());
+        classWrapper.setName(entity.getName() + "Repository");
         classWrapper.setContent(content.toString());
 
         return classWrapper;
@@ -370,6 +371,7 @@ public class TransformService {
         newLineSpaced(content, "@Id", getSpaces(spacing));
         newLineSpaced(content, "@Column(name = \"id\", nullable = false)", getSpaces(spacing));
         newLineSpaced(content, "@GeneratedValue(strategy = GenerationType.IDENTITY)", getSpaces(spacing));
+        newLineSpaced(content, "private Long id;", getSpaces(spacing));
     }
 
     private void addVariable(StringBuilder content, Variable variable) {
@@ -381,7 +383,6 @@ public class TransformService {
     }
 
     private void addRelation(StringBuilder content, Relation relation, String entityName) {
-
         if (Objects.equals(relation.getAnnotation(), "OneToMany")) {
             newLineSpaced(content, "@" + relation.getAnnotation() + "(mappedBy = \""
                     + Util.decapitalize(entityName) + "\", cascade = CascadeType.MERGE)" , getSpaces(spacing));
@@ -401,8 +402,6 @@ public class TransformService {
                     + " " + Util.decapitalize(relation.getRelatedTo()), getSpaces(spacing));
         }
         breakLine(content);
-
-
     }
 
     private void returnResponseEntity(StringBuilder content, String entityName) {
