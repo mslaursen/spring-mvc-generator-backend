@@ -102,11 +102,38 @@ public class TransformService {
         newLine(content, "@RestController");
         newLine(content, "@RequestMapping(\"/api/" + Util.pluralize(entity.getName()) + "\")");
         newLine(content, "@CrossOrigin");
-        addClassHeader(content, ClassType.ENTITY, entity.getName());
+        addClassHeader(content, ClassType.CONTROLLER, entity.getName());
 
-        // --
+        // -- inject service
 
-        // --
+        newLineSpaced(content, "private final " + entity.getName()
+                + "Service " + entity.getName().toLowerCase() + "Service;", getSpaces(spacing));
+        breakLine(content);
+
+        newLineSpaced(content, "@Autowired", getSpaces(spacing));
+        addConstructor(content, entity.getName(), ClassType.CONTROLLER, ClassType.SERVICE);
+
+        // -- crud methods
+
+        if (entity.getHasCreate()) {
+
+        }
+
+        if (entity.getHasReadAll()) {
+
+        }
+
+        if (entity.getHasRead()) {
+
+        }
+
+        if (entity.getHasUpdate()) {
+
+        }
+
+        if (entity.getHasDelete()) {
+
+        }
 
         ClassWrapper classWrapper = new ClassWrapper();
         classWrapper.setName(entity.getName());
@@ -114,6 +141,20 @@ public class TransformService {
 
         System.out.println(content);
         return classWrapper;
+    }
+
+    private void addConstructor(StringBuilder content, String entityName, ClassType type1, ClassType type2) {
+        newLineSpaced(content, "public " + entityName
+                + Util.capitalize(type1.toString()) + "(" + entityName
+                + Util.capitalize(type2.toString()) + " " + Util.decapitalize(entityName)
+                + Util.capitalize(type2.toString()) + ") {"
+                , getSpaces(spacing));
+
+        newLineSpaced(content, "this." + Util.decapitalize(entityName) + Util.capitalize(type2.toString()) + " = "
+                + Util.decapitalize(entityName) + Util.capitalize(type2.toString()) + ";"
+                , getSpaces((byte) (spacing*2)));
+
+        newLineSpaced(content, "}", getSpaces(spacing));
     }
 
     private ClassWrapper toServiceClass(Entity entity) {

@@ -33,6 +33,7 @@ public class Entity {
     private String name;
 
     private Boolean hasCreate;
+    private Boolean hasReadAll;
     private Boolean hasRead;
     private Boolean hasUpdate;
     private Boolean hasDelete;
