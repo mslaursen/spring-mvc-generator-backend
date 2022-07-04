@@ -26,8 +26,12 @@ public class ProjectService {
 
     }
 
-    public List<Project> read() {
+    public List<Project> findAll() {
        return projectRepository.findAll();
+    }
+
+    public Project findById(Long id) {
+        return projectRepository.findById(id).orElseThrow();
     }
 
     public Project update(Project project) {

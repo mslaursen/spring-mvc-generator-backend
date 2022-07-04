@@ -59,10 +59,17 @@ public class ProjectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Project>> read() {
-        List<Project> projects = projectService.read();
+    public ResponseEntity<List<Project>> fetchAll() {
+        List<Project> projects = projectService.findAll();
         return ResponseEntity.ok()
                 .body(projects);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Project> fetchById(@PathVariable Long id) {
+        Project project = projectService.findById(id);
+        return ResponseEntity.ok()
+                .body(project);
     }
 
     @GetMapping("/user/{id}")
