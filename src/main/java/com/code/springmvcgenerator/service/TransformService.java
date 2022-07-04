@@ -340,30 +340,6 @@ public class TransformService {
         breakLine(content);
     }
 
-    private void newLine(StringBuilder content, String str) {
-        content.append(str);
-        breakLine(content);
-    }
-
-    private void newLineSpaced(StringBuilder content, String str, String spacing) {
-        content.append(spacing);
-        content.append(str);
-        breakLine(content);
-    }
-    
-    private void line(StringBuilder content, String str) {
-        content.append(str);
-    }
-
-    private void lineSpaced(StringBuilder sb, String str, String spacing) {
-        sb.append(spacing);
-        sb.append(str);
-    }
-
-    private void breakLine(StringBuilder sb) {
-        sb.append("\n");
-    }
-
     private void addId(StringBuilder content) {
         newLineSpaced(content, "@Id", getSpaces(spacing));
         newLineSpaced(content, "@Column(name = \"id\", nullable = false)", getSpaces(spacing));
@@ -415,5 +391,27 @@ public class TransformService {
 
     private String getSpaces(byte spacing) {
         return " ".repeat(spacing);
+    }
+
+    // ---------->
+
+    private void newLine(StringBuilder content, String str) {
+        content.append(str);
+        breakLine(content);
+    }
+
+    private void newLineSpaced(StringBuilder content, String str, String spacing) {
+        content.append(spacing);
+        content.append(str);
+        breakLine(content);
+    }
+
+    private void lineSpaced(StringBuilder sb, String str, String spacing) {
+        sb.append(spacing);
+        sb.append(str);
+    }
+
+    private void breakLine(StringBuilder sb) {
+        sb.append("\n");
     }
 }
