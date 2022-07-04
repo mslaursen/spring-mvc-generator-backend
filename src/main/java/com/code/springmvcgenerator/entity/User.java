@@ -23,6 +23,6 @@ public class User {
     @ToString.Exclude
     private List<Project> projectList;
 
-    private String username;
+    private String email;
     private String password;
 }

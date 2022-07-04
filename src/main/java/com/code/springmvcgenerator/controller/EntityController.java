@@ -2,7 +2,6 @@ package com.code.springmvcgenerator.controller;
 
 import com.code.springmvcgenerator.entity.Entity;
 import com.code.springmvcgenerator.service.EntityService;
-import com.code.springmvcgenerator.service.ZipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

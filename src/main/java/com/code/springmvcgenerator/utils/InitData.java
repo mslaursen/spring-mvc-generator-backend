@@ -30,7 +30,7 @@ public class InitData implements CommandLineRunner {
     @Override
     public void run(String... args) {
         User user = new User();
-        user.setUsername("a");
+        user.setEmail("a");
         user.setPassword("b");
         userService.save(user);
 

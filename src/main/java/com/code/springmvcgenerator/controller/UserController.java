@@ -45,7 +45,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<User> updateById(@RequestBody User user, @PathVariable Long id) {
         User toUpdate = userService.findById(id);
-        toUpdate.setUsername(user.getUsername());
+        toUpdate.setEmail(user.getEmail());
         toUpdate.setPassword(user.getPassword());
 
         User updated = userService.update(toUpdate);

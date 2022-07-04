@@ -267,7 +267,7 @@ public class TransformService {
             for (Variable v : entity.getVariables()) {
                 newLineSpaced(content, "toUpdate.set" + Util.capitalize(v.getName()) + "("
                         + Util.decapitalize(entity.getName()) + ".get"
-                        + Util.capitalize(v.getName()) + "());", getSpaces((byte) (spacing*2)));
+                        + Util.capitalize(v.getName()) + "());", getSpaces((byte) (spacing * 2)));
             }
 
             breakLine(content);
