@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/entity-details")
+@RequestMapping("/api/entities")
 @CrossOrigin
 public class EntityController {
 
