@@ -1,9 +1,6 @@
 package com.code.springmvcgenerator.utils;
 
-import com.code.springmvcgenerator.entity.Entity;
-import com.code.springmvcgenerator.entity.Project;
-import com.code.springmvcgenerator.entity.User;
-import com.code.springmvcgenerator.entity.Variable;
+import com.code.springmvcgenerator.entity.*;
 import com.code.springmvcgenerator.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -58,6 +55,18 @@ public class InitData implements CommandLineRunner {
         v1.setColumnName("age_limit");
         v1.setEntity(entity);
         variableService.save(v1);
+
+        Relation r1 = new Relation();
+        r1.setAnnotation("OneToMany");
+        r1.setRelatedTo("City");
+        r1.setEntity(entity);
+        relationService.save(r1);
+
+        Relation r2 = new Relation();
+        r2.setAnnotation("ManyToOne");
+        r2.setRelatedTo("Man");
+        r2.setEntity(entity);
+        relationService.save(r2);
 
         Entity entity2 = new Entity();
         entity2.setName("City2");

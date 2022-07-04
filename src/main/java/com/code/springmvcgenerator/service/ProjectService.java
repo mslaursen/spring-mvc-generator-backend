@@ -38,4 +38,8 @@ public class ProjectService {
     public void deleteById(Long id) {
         projectRepository.deleteById(id);
     }
+
+    public List<Project> findByUserId(Long id) {
+        return projectRepository.findByUserId(id);
+    }
 }

@@ -65,6 +65,13 @@ public class ProjectController {
                 .body(projects);
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<Project>> fetchProjectsByUserId(@PathVariable Long id) {
+        List<Project> found = projectService.findByUserId(id);
+        return ResponseEntity.ok()
+                .body(found);
+    }
+
     @PutMapping
     public ResponseEntity<Project> update(@RequestBody Project project) {
         Project updatedProject = projectService.update(project);
