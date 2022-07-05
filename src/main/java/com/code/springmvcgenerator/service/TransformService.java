@@ -368,9 +368,6 @@ public class TransformService {
         } else {
             newLineSpaced(content, "@" + relation.getAnnotation(), getSpaces(spacing));
 
-            newLineSpaced(content, "@JoinColumn(name = \""
-                    + Util.decapitalize(relation.getRelatedTo()) + "_id\")", getSpaces(spacing));
-
             lineSpaced(content, "private " + relation.getRelatedTo()
                     + " " + Util.decapitalize(relation.getRelatedTo()) + ";", getSpaces(spacing));
         }

@@ -25,7 +25,6 @@ public class ZipService {
         // Create java class files for each entityDetail
         List<File> files = createEntityFiles(eds, filesFolder);
 
-        System.out.println(files.size());
         // Add files to zip
         zipFiles(files, zipName);
     }
