@@ -36,4 +36,8 @@ public class EntityService {
     public void deleteById(Long id) {
         entityRepository.deleteById(id);
     }
+
+    public List<Entity> findByProjectId(Long id) {
+        return entityRepository.findByProjectId(id);
+    }
 }

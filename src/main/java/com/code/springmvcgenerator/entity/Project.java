@@ -22,7 +22,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.MERGE, orphanRemoval = true)
     @ToString.Exclude
     @JsonManagedReference
     private List<Entity> entities;

@@ -41,6 +41,13 @@ public class EntityController {
                 .body(foundEntity);
     }
 
+    @GetMapping("/project/{id}")
+    public ResponseEntity<List<Entity>> fetchEntitiesByProjectId(@PathVariable Long id) {
+        List<Entity> found = entityService.findByProjectId(id);
+        return ResponseEntity.ok()
+                .body(found);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Entity> updateById(@RequestBody Entity entity, @PathVariable Long id) {
         Entity entityToUpdate = entityService.findById(id);

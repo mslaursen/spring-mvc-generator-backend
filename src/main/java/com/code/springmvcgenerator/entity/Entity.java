@@ -17,7 +17,7 @@ import java.util.List;
 @ToString
 @javax.persistence.Entity
 
-public class Entity implements Serializable {
+public class Entity {
 
     @Id
     @Column(name = "id", nullable = false)
