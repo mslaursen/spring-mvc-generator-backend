@@ -30,7 +30,6 @@ public class EntityController {
     @GetMapping
     public ResponseEntity<List<Entity>> fetchEntities() {
         List<Entity> entities = entityService.findAll();
-        System.out.println(entities);
         return ResponseEntity.ok()
                 .body(entities);
     }

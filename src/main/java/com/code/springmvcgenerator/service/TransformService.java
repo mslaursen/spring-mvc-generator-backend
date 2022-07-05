@@ -358,7 +358,7 @@ public class TransformService {
     private void addRelation(StringBuilder content, Relation relation, String entityName) {
         if (Objects.equals(relation.getAnnotation(), "OneToMany")) {
             newLineSpaced(content, "@" + relation.getAnnotation() + "(mappedBy = \""
-                    + Util.decapitalize(entityName) + "\", cascade = CascadeType.MERGE)" , getSpaces(spacing));
+                    + Util.decapitalize(entityName) + "\", cascade = CascadeType.ALL)" , getSpaces(spacing));
 
             newLineSpaced(content, "@ToString.Exclude", getSpaces(spacing));
 

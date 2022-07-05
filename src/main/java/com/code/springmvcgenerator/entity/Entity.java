@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,7 @@ import java.util.List;
 @ToString
 @javax.persistence.Entity
 
-public class Entity {
+public class Entity implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -27,12 +28,12 @@ public class Entity {
     @JsonBackReference
     private Project project;
 
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
     @ToString.Exclude
     @JsonManagedReference
     private List<Variable> variables;
 
-    @OneToMany(mappedBy = "entity", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL)
     @ToString.Exclude
     @JsonManagedReference
     private List<Relation> relations;
