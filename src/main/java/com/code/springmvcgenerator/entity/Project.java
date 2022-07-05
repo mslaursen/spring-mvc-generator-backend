@@ -15,9 +15,6 @@ import java.util.List;
 @Setter
 @ToString
 @javax.persistence.Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Project {
 
     @Id
@@ -27,12 +24,13 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.MERGE)
     @ToString.Exclude
+    @JsonManagedReference
     private List<Entity> entities;
 
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
 }

@@ -2,6 +2,7 @@ package com.code.springmvcgenerator.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,9 +14,6 @@ import javax.persistence.*;
 @Setter
 @ToString
 @javax.persistence.Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id")
 public class Relation {
 
     @Id
@@ -27,6 +25,6 @@ public class Relation {
     private String relatedTo;
 
     @ManyToOne
-    @JoinColumn(name = "entity_detail_id")
+    @JsonBackReference
     private Entity entity;
 }
