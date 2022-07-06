@@ -361,12 +361,14 @@ public class TransformService {
                     + Util.decapitalize(entityName) + "\", cascade = CascadeType.ALL)" , getSpaces(spacing));
 
             newLineSpaced(content, "@ToString.Exclude", getSpaces(spacing));
+            newLineSpaced(content, "@JsonManagedReference", getSpaces(spacing));
 
             lineSpaced(content, "private List<"
                     + relation.getRelatedTo() + "> "
                     + Util.decapitalize(relation.getRelatedTo()) + "List", getSpaces(spacing));
         } else {
             newLineSpaced(content, "@" + relation.getAnnotation(), getSpaces(spacing));
+            newLineSpaced(content, "@JsonBackReference", getSpaces(spacing));
 
             lineSpaced(content, "private " + relation.getRelatedTo()
                     + " " + Util.decapitalize(relation.getRelatedTo()) + ";", getSpaces(spacing));
