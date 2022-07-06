@@ -44,6 +44,8 @@ public class ProjectController {
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(zipFile));
 
+        Util.clearFolder(filesFolder);
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="  + zipFile.getName())
                 .contentLength(zipFile.length())
