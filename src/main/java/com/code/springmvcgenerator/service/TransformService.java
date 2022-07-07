@@ -331,12 +331,7 @@ public class TransformService {
             case REPOSITORY -> type = "interface";
         }
 
-        content.append("public ")
-                .append(type)
-                .append(" ")
-                .append(className)
-                .append(" {");
-        breakLine(content);
+        newLine(content, "public " + type + " " + className + " {");
         breakLine(content);
     }
 
