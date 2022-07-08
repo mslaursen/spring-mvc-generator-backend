@@ -30,44 +30,46 @@ public class InitData implements CommandLineRunner {
         user.setEmail("a");
         user.setPassword("b");
         userService.save(user);
-
+//
         Project project = new Project();
-        project.setName("Test");
+        project.setName("spring-mvc-generator");
         project.setUser(user);
-
+        project.setUsesLombok(true);
+//
         projectService.create(project);
-
-
+//
+//
         Entity entity = new Entity();
         entity.setName("City");
-
+//
         entity.setHasCreate(true);
         entity.setHasReadAll(true);
         entity.setHasRead(true);
         entity.setHasUpdate(false);
         entity.setHasDelete(false);
+
         entity.setProject(project);
         entityService.save(entity);
-
+//
         Variable v1 = new Variable();
         v1.setDataType("Integer");
         v1.setName("AgeLimit");
         v1.setColumnName("age_limit");
         v1.setEntity(entity);
         variableService.save(v1);
-
+//
         Relation r1 = new Relation();
         r1.setAnnotation("OneToMany");
         r1.setRelatedTo("City");
         r1.setEntity(entity);
         relationService.save(r1);
-
+//
         Relation r2 = new Relation();
         r2.setAnnotation("ManyToOne");
         r2.setRelatedTo("Man");
         r2.setEntity(entity);
         relationService.save(r2);
-
+//
         Entity entity2 = new Entity();
         entity2.setName("City2");
         entity2.setHasCreate(true);

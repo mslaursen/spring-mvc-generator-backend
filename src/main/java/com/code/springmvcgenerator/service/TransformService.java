@@ -69,6 +69,8 @@ public class TransformService {
     private ClassWrapper toEntityClass(Entity entity) {
         StringBuilder content = new StringBuilder();
 
+        addImports(content, entity, ClassType.ENTITY);
+
         newLine(content, "@Getter");
         newLine(content, "@Setter");
         newLine(content, "@ToString");
@@ -100,6 +102,8 @@ public class TransformService {
     private ClassWrapper toControllerClass(Entity entity) {
         StringBuilder content = new StringBuilder();
 
+        addImports(content, entity, ClassType.CONTROLLER);
+
         newLine(content, "@RestController");
         newLine(content, "@RequestMapping(\"/api/" + Util.pluralize(entity.getName()) + "\")");
         newLine(content, "@CrossOrigin");
@@ -127,6 +131,8 @@ public class TransformService {
     private ClassWrapper toServiceClass(Entity entity) {
         StringBuilder content = new StringBuilder();
 
+        addImports(content, entity, ClassType.SERVICE);
+
         newLine(content, "@Service");
         addClassHeader(content, ClassType.SERVICE, entity.getName() + "Service");
 
@@ -152,6 +158,8 @@ public class TransformService {
     private ClassWrapper toRepositoryInterface(Entity entity) {
         StringBuilder content = new StringBuilder();
 
+        addImports(content, entity, ClassType.REPOSITORY);
+
         newLine(content, "public interface " + entity.getName()
                 + "Repository extends JpaRepository<" + entity.getName() + ", Long> {");
         newLine(content, "}");
@@ -161,6 +169,76 @@ public class TransformService {
         classWrapper.setContent(content.toString());
 
         return classWrapper;
+    }
+
+    private boolean checkForOneToMany(Entity entity) {
+        for (Relation r : entity.getRelations()) {
+            if (r.getAnnotation().equals("OneToMany")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void addImports(StringBuilder content, Entity entity, ClassType type) {
+        String projectNameStripped = entity.getProject().getName().toLowerCase().replace('-', ' ');
+        String group = entity.getProject().getGroup();
+        boolean hasReadAll = entity.getHasReadAll();
+        boolean hasRead = entity.getHasRead();
+        boolean hasOneToMany = checkForOneToMany(entity);
+        boolean usesLombok = entity.getProject().getUsesLombok();
+
+        switch (type) {
+            case ENTITY -> {
+                newLine(content, "package " + group + "." + projectNameStripped + "." + "entity");
+                breakLine(content);
+
+                if (hasRead) {
+                    newLine(content, "import com.fasterxml.jackson.annotation.JsonBackReference;");
+                }
+
+                if (hasReadAll) {
+                    newLine(content, "import com.fasterxml.jackson.annotation.JsonManagedReference;");
+                }
+
+                if (usesLombok) {
+                    newLine(content, "import lombok.Getter;");
+                    newLine(content, "import lombok.Setter;");
+                    newLine(content, "import lombok.ToString;");
+                }
+
+                breakLine(content);
+                newLine(content, "import javax.persistence.*;");
+                if (hasOneToMany) {
+                    newLine(content, "import java.util.List;");
+                }
+                breakLine(content);
+
+            }
+            case CONTROLLER -> {
+                newLine(content, "package com.x.y.z;");
+                breakLine(content);
+                newLine(content, "import com.x.y.z;");
+                newLine(content, "import com.x.y.z.Service;");
+                breakLine(content);
+                newLine(content, "import org.springframework.beans.factory.annotation.Autowired;");
+                newLine(content, "import org.springframework.http.ResponseEntity;");
+                newLine(content, "import org.springframework.web.bind.annotation.*;");
+
+                if (hasReadAll) {
+                    breakLine(content);
+                    newLine(content, "import java.util.List;");
+                }
+
+                breakLine(content);
+            }
+            case SERVICE -> {
+
+            }
+            case REPOSITORY -> {
+
+            }
+        }
     }
 
     private void addCrud(StringBuilder content, Entity entity, ClassType type) {

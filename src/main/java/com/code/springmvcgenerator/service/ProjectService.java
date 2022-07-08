@@ -3,15 +3,11 @@ package com.code.springmvcgenerator.service;
 import com.code.springmvcgenerator.entity.Project;
 import com.code.springmvcgenerator.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/projects")
-@CrossOrigin
+@Service
 public class ProjectService {
 
     private final ProjectRepository projectRepository;

@@ -1,5 +1,6 @@
 package com.code.springmvcgenerator.entity;
 
+import com.code.springmvcgenerator.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -22,12 +23,14 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @JsonManagedReference
-    private List<Entity> entities;
+    private List<com.code.springmvcgenerator.entity.Entity> entities;
 
     private String name;
+    private String group;
+    private Boolean usesLombok;
 
     @ManyToOne
     @JsonBackReference
