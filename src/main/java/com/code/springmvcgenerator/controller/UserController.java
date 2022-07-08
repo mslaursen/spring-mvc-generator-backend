@@ -4,9 +4,11 @@ import com.code.springmvcgenerator.entity.User;
 import com.code.springmvcgenerator.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.LoginException;
 import java.util.List;
 
 @RestController
@@ -22,10 +24,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<User> create(@RequestBody User user) throws Exception {
         User savedUser = userService.save(user);
         return ResponseEntity.ok()
             .body(savedUser);
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<User> verifyLogin(@RequestBody User user) throws LoginException {
+        User userVerified = userService.verifyLogin(user);
+        return ResponseEntity.ok()
+                .body(userVerified);
     }
 
     @GetMapping

@@ -5,6 +5,7 @@ import com.code.springmvcgenerator.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.util.List;
 
 @Service
@@ -17,8 +18,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public User save(User user) throws Exception {
+        if (userRepository.emailTaken(user.getEmail()).isEmpty()) {
+            return userRepository.save(user);
+        } else {
+            throw new Exception("Email taken");
+        }
+    }
+
+    public User verifyLogin(User user) throws LoginException {
+        return userRepository.findByEmailPasswordMatch(user.getEmail(), user.getPassword())
+                .orElseThrow(() -> new LoginException("User not found"));
     }
 
     public List<User> findAll() {
