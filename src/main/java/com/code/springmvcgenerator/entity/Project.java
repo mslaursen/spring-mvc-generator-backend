@@ -1,10 +1,7 @@
 package com.code.springmvcgenerator.entity;
 
-import com.code.springmvcgenerator.entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,8 +26,6 @@ public class Project {
     private List<com.code.springmvcgenerator.entity.Entity> entities;
 
     private String name;
-    private String group;
-    private Boolean usesLombok;
 
     @ManyToOne
     @JsonBackReference

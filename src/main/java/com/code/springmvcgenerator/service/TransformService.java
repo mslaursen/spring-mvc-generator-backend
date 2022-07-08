@@ -17,10 +17,6 @@ public class TransformService {
 
     private byte spacing = 4;
 
-   // public TransformService(byte spacing) {
-   //     this.spacing = spacing;
-   // }
-
     private List<ClassWrapper> getClasses(Entity entity) {
         List<ClassWrapper> classes = new ArrayList<>();
 
@@ -74,7 +70,7 @@ public class TransformService {
         newLine(content, "@Getter");
         newLine(content, "@Setter");
         newLine(content, "@ToString");
-        newLine(content, "@Entity");
+        newLine(content, "@javax.persistence.Entity");
         addClassHeader(content, ClassType.ENTITY, entity.getName());
 
         addId(content);
@@ -171,9 +167,9 @@ public class TransformService {
         return classWrapper;
     }
 
-    private boolean checkForOneToMany(Entity entity) {
+    private boolean checkForAnnotation(Entity entity, String annotation) {
         for (Relation r : entity.getRelations()) {
-            if (r.getAnnotation().equals("OneToMany")) {
+            if (r.getAnnotation().equals(annotation)) {
                 return true;
             }
         }
@@ -181,31 +177,25 @@ public class TransformService {
     }
 
     private void addImports(StringBuilder content, Entity entity, ClassType type) {
-        String projectNameStripped = entity.getProject().getName().toLowerCase().replace('-', ' ');
-        String group = entity.getProject().getGroup();
         boolean hasReadAll = entity.getHasReadAll();
-        boolean hasRead = entity.getHasRead();
-        boolean hasOneToMany = checkForOneToMany(entity);
-        boolean usesLombok = entity.getProject().getUsesLombok();
+        boolean hasOneToMany = checkForAnnotation(entity, "OneToMany");
+        boolean hasManyToOne = checkForAnnotation(entity, "ManyToOne");
 
         switch (type) {
             case ENTITY -> {
-                newLine(content, "package " + group + "." + projectNameStripped + "." + "entity");
-                breakLine(content);
-
-                if (hasRead) {
+                if (hasManyToOne) {
                     newLine(content, "import com.fasterxml.jackson.annotation.JsonBackReference;");
                 }
 
-                if (hasReadAll) {
+                if (hasOneToMany) {
                     newLine(content, "import com.fasterxml.jackson.annotation.JsonManagedReference;");
                 }
 
-                if (usesLombok) {
-                    newLine(content, "import lombok.Getter;");
-                    newLine(content, "import lombok.Setter;");
-                    newLine(content, "import lombok.ToString;");
-                }
+
+                newLine(content, "import lombok.Getter;");
+                newLine(content, "import lombok.Setter;");
+                newLine(content, "import lombok.ToString;");
+
 
                 breakLine(content);
                 newLine(content, "import javax.persistence.*;");
@@ -216,27 +206,31 @@ public class TransformService {
 
             }
             case CONTROLLER -> {
-                newLine(content, "package com.x.y.z;");
-                breakLine(content);
-                newLine(content, "import com.x.y.z;");
-                newLine(content, "import com.x.y.z.Service;");
-                breakLine(content);
                 newLine(content, "import org.springframework.beans.factory.annotation.Autowired;");
                 newLine(content, "import org.springframework.http.ResponseEntity;");
                 newLine(content, "import org.springframework.web.bind.annotation.*;");
+                breakLine(content);
 
                 if (hasReadAll) {
-                    breakLine(content);
                     newLine(content, "import java.util.List;");
                 }
 
                 breakLine(content);
             }
             case SERVICE -> {
+                newLine(content, "import org.springframework.beans.factory.annotation.Autowired;");
+                newLine(content, "import org.springframework.stereotype.Service;");
+                breakLine(content);
 
+                if (hasReadAll) {
+                    newLine(content, "import java.util.List;");
+                }
+
+                breakLine(content);
             }
             case REPOSITORY -> {
-
+                newLine(content, "import org.springframework.data.jpa.repository.JpaRepository;");
+                breakLine(content);
             }
         }
     }
@@ -439,9 +433,15 @@ public class TransformService {
             lineSpaced(content, "private List<"
                     + relation.getRelatedTo() + "> "
                     + Util.decapitalize(relation.getRelatedTo()) + "List", getSpaces(spacing));
-        } else {
+        }
+        else if (Objects.equals(relation.getAnnotation(), "ManyToOne")) {
             newLineSpaced(content, "@" + relation.getAnnotation(), getSpaces(spacing));
             newLineSpaced(content, "@JsonBackReference", getSpaces(spacing));
+
+            lineSpaced(content, "private " + relation.getRelatedTo()
+                    + " " + Util.decapitalize(relation.getRelatedTo()) + ";", getSpaces(spacing));
+        } else {
+            newLineSpaced(content, "@" + relation.getAnnotation(), getSpaces(spacing));
 
             lineSpaced(content, "private " + relation.getRelatedTo()
                     + " " + Util.decapitalize(relation.getRelatedTo()) + ";", getSpaces(spacing));
@@ -465,7 +465,7 @@ public class TransformService {
         return " ".repeat(spacing);
     }
 
-    // ---------->
+    // StringBuilder ---------->
 
     private void newLine(StringBuilder content, String str) {
         content.append(str);
