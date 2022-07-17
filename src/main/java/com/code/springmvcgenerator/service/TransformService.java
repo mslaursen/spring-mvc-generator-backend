@@ -263,41 +263,46 @@ public class TransformService {
     }
 
     private void addCreate(StringBuilder content, String name, ClassType type) {
+        String nameDecapitalized = Util.decapitalize(name);
+
+
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@PostMapping", getSpaces(spacing));
             newLineSpaced(content, "public ResponseEntity<" + name + "> create(@RequestBody "
-                    + name + " " + Util.decapitalize(name) + ") {", getSpaces(spacing));
+                    + name + " " + nameDecapitalized + ") {", getSpaces(spacing));
 
-            newLineSpaced(content, name + " saved" + name + " = " + Util.decapitalize(name)
-                    + "Service.save(" + Util.decapitalize(name) + ");", getSpaces((byte) (spacing * 2)));
+            newLineSpaced(content, name + " saved" + name + " = " + nameDecapitalized
+                    + "Service.save(" + nameDecapitalized + ");", getSpaces((byte) (spacing * 2)));
 
             returnResponseEntity(content, "saved" + name);
         }
         else if (type == ClassType.SERVICE) {
             newLineSpaced(content, "public " + name + " save("
-                    + name + " " + Util.decapitalize(name) + ") {", getSpaces(spacing));
+                    + name + " " + nameDecapitalized + ") {", getSpaces(spacing));
 
-            newLineSpaced(content, "return " + Util.decapitalize(name)
-                    + "Repository.save(" + Util.decapitalize(name) + ");", getSpaces((byte) (spacing * 2)));
+            newLineSpaced(content, "return " + nameDecapitalized
+                    + "Repository.save(" + nameDecapitalized + ");", getSpaces((byte) (spacing * 2)));
 
             newLineSpaced(content, "}", getSpaces(spacing));
         }
     }
 
     private void addReadAll(StringBuilder content, String name, ClassType type) {
+        String nameDecapitalized = Util.decapitalize(name);
+
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@GetMapping", getSpaces(spacing));
             newLineSpaced(content, "public ResponseEntity<List<" + name + ">> fetchAll() {", getSpaces(spacing));
 
             newLineSpaced(content, "List<" + name + "> found = "
-                    + Util.decapitalize(name) + "Service.findAll();", getSpaces((byte) (spacing * 2)));
+                    + nameDecapitalized + "Service.findAll();", getSpaces((byte) (spacing * 2)));
 
             returnResponseEntity(content, "found");
         }
         else if (type == ClassType.SERVICE) {
             newLineSpaced(content, "public List<" + name + "> findAll() {", getSpaces(spacing));
 
-            newLineSpaced(content, "return " + Util.decapitalize(name) + "Repository.findAll();"
+            newLineSpaced(content, "return " + nameDecapitalized + "Repository.findAll();"
                     , getSpaces((byte) (spacing * 2)));
 
             newLineSpaced(content, "}", getSpaces(spacing));
@@ -305,12 +310,14 @@ public class TransformService {
     }
 
     private void addRead(StringBuilder content, String name, ClassType type) {
+        String nameDecapitalized = Util.decapitalize(name);
+
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@GetMapping(\"/{id}\")", getSpaces(spacing));
             newLineSpaced(content, "public ResponseEntity<" + name
                     + "> fetchById(@PathVariable Long id) {", getSpaces(spacing));
 
-            newLineSpaced(content, name + " found = " + Util.decapitalize(name)
+            newLineSpaced(content, name + " found = " + nameDecapitalized
                     + "Service.findById(id);", getSpaces((byte) (spacing * 2)));
 
             returnResponseEntity(content, "found");
@@ -318,7 +325,7 @@ public class TransformService {
         else if (type == ClassType.SERVICE) {
             newLineSpaced(content, "public " + name + " findById(Long id) {", getSpaces(spacing));
 
-            newLineSpaced(content, "return " + Util.decapitalize(name)
+            newLineSpaced(content, "return " + nameDecapitalized
                     + "Repository.findById(id).orElseThrow();", getSpaces((byte) (spacing * 2)));
 
             newLineSpaced(content, "}", getSpaces(spacing));
@@ -326,25 +333,29 @@ public class TransformService {
     }
 
     private void addUpdate(StringBuilder content, Entity entity, ClassType type) {
+        String nameDecapitalized = Util.decapitalize(entity.getName());
+
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@PutMapping(\"/{id}\")", getSpaces(spacing));
 
             newLineSpaced(content, "public ResponseEntity<" + entity.getName()
                     + "> updateById(@RequestBody " + entity.getName() + " "
-                    + Util.decapitalize(entity.getName()) + ", @PathVariable Long id) {", getSpaces(spacing));
+                    + nameDecapitalized + ", @PathVariable Long id) {", getSpaces(spacing));
 
             newLineSpaced(content, entity.getName() + " toUpdate = "
-                    + Util.decapitalize(entity.getName()) + "Service.findById(id);", getSpaces((byte) (spacing * 2)));
+                    + nameDecapitalized + "Service.findById(id);", getSpaces((byte) (spacing * 2)));
 
             for (Variable v : entity.getVariables()) {
-                newLineSpaced(content, "toUpdate.set" + Util.capitalize(v.getName()) + "("
-                        + Util.decapitalize(entity.getName()) + ".get"
-                        + Util.capitalize(v.getName()) + "());", getSpaces((byte) (spacing * 2)));
+                String vNameCapitalized = Util.capitalize(v.getName());
+
+                newLineSpaced(content, "toUpdate.set" + vNameCapitalized + "("
+                        + nameDecapitalized + ".get"
+                        + vNameCapitalized + "());", getSpaces((byte) (spacing * 2)));
             }
 
             breakLine(content);
             newLineSpaced(content, entity.getName() + " updated = "
-                    + Util.decapitalize(entity.getName())
+                    + nameDecapitalized
                     + "Service.update(toUpdate);", getSpaces((byte) (spacing * 2)));
 
             returnResponseEntity(content, "updated");
@@ -353,7 +364,7 @@ public class TransformService {
             newLineSpaced(content, "public " + entity.getName()
                     + " update(" + entity.getName() + " toUpdate) {", getSpaces(spacing));
 
-            newLineSpaced(content, "return " + Util.decapitalize(entity.getName())
+            newLineSpaced(content, "return " + nameDecapitalized
                     + "Repository.save(toUpdate);", getSpaces((byte) (spacing * 2)));
 
             newLineSpaced(content, "}", getSpaces(spacing));
@@ -361,12 +372,14 @@ public class TransformService {
     }
 
     private void addDelete(StringBuilder content, String name, ClassType type) {
+        String nameDecapitalized = Util.decapitalize(name);
+
         if (type == ClassType.CONTROLLER) {
             newLineSpaced(content, "@DeleteMapping(\"/{id}\")", getSpaces(spacing));
             newLineSpaced(content, "public ResponseEntity<Object> deleteById(@PathVariable Long id) {",
                     getSpaces(spacing));
 
-            newLineSpaced(content, Util.decapitalize(name) + "Service.deleteById(id);",
+            newLineSpaced(content, nameDecapitalized + "Service.deleteById(id);",
                     getSpaces((byte) (spacing * 2)));
 
             returnBodylessResponseEntity(content);
@@ -375,7 +388,7 @@ public class TransformService {
             newLineSpaced(content, "public void deleteById(Long id) {",
                     getSpaces(spacing));
 
-            newLineSpaced(content, Util.decapitalize(name) + "Repository.deleteById(id);",
+            newLineSpaced(content, nameDecapitalized + "Repository.deleteById(id);",
                     getSpaces((byte) (spacing * 2)));
 
             newLineSpaced(content, "}", getSpaces(spacing));
@@ -383,14 +396,16 @@ public class TransformService {
     }
 
     private void addConstructor(StringBuilder content, String entityName, ClassType type1, ClassType type2) {
+        String nameDecapitalized = Util.decapitalize(entityName);
+
         newLineSpaced(content, "public " + entityName
                 + Util.capitalize(type1.toString()) + "(" + entityName
-                + Util.capitalize(type2.toString()) + " " + Util.decapitalize(entityName)
+                + Util.capitalize(type2.toString()) + " " + nameDecapitalized
                 + Util.capitalize(type2.toString()) + ") {"
                 , getSpaces(spacing));
 
-        newLineSpaced(content, "this." + Util.decapitalize(entityName) + Util.capitalize(type2.toString()) + " = "
-                + Util.decapitalize(entityName) + Util.capitalize(type2.toString()) + ";"
+        newLineSpaced(content, "this." + nameDecapitalized + Util.capitalize(type2.toString()) + " = "
+                + nameDecapitalized + Util.capitalize(type2.toString()) + ";"
                 , getSpaces((byte) (spacing*2)));
 
         newLineSpaced(content, "}", getSpaces(spacing));
@@ -423,6 +438,8 @@ public class TransformService {
     }
 
     private void addRelation(StringBuilder content, Relation relation, String entityName) {
+        String relationDecapitalized = Util.decapitalize(relation.getRelatedTo());
+
         if (Objects.equals(relation.getAnnotation(), "OneToMany")) {
             newLineSpaced(content, "@" + relation.getAnnotation() + "(mappedBy = \""
                     + Util.decapitalize(entityName) + "\", cascade = CascadeType.ALL)" , getSpaces(spacing));
@@ -432,19 +449,19 @@ public class TransformService {
 
             lineSpaced(content, "private List<"
                     + relation.getRelatedTo() + "> "
-                    + Util.decapitalize(relation.getRelatedTo()) + "List", getSpaces(spacing));
+                    + relationDecapitalized + "List", getSpaces(spacing));
         }
         else if (Objects.equals(relation.getAnnotation(), "ManyToOne")) {
             newLineSpaced(content, "@" + relation.getAnnotation(), getSpaces(spacing));
             newLineSpaced(content, "@JsonBackReference", getSpaces(spacing));
 
             lineSpaced(content, "private " + relation.getRelatedTo()
-                    + " " + Util.decapitalize(relation.getRelatedTo()) + ";", getSpaces(spacing));
+                    + " " + relationDecapitalized + ";", getSpaces(spacing));
         } else {
             newLineSpaced(content, "@" + relation.getAnnotation(), getSpaces(spacing));
 
             lineSpaced(content, "private " + relation.getRelatedTo()
-                    + " " + Util.decapitalize(relation.getRelatedTo()) + ";", getSpaces(spacing));
+                    + " " + relationDecapitalized + ";", getSpaces(spacing));
         }
         breakLine(content);
     }
