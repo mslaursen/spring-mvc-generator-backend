@@ -31,12 +31,14 @@ public class ProjectController {
         this.zipService = zipService;
     }
 
-    @PostMapping("/download")
-    public ResponseEntity<Resource> download(@RequestBody Project project) throws FileNotFoundException {
+    @PostMapping("/download/{id}")
+    public ResponseEntity<Resource> download(@PathVariable Long id) throws FileNotFoundException {
         String filesFolder = "files-test";
         String zipName = "test.zip";
 
         Util.clearFolder(filesFolder);
+
+        Project project = projectService.findById(id);
 
         zipService.zipEntities(project.getEntities(), filesFolder, zipName);
 
